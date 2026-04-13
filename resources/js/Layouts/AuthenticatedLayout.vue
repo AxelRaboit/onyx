@@ -97,9 +97,14 @@ const devNavItem = computed(() => {
                 </button>
             </div>
 
-            <div v-if="!collapsed" class="border-b border-base px-4 py-3 shrink-0">
-                <p class="text-sm font-medium text-primary truncate">{{ $page.props.auth.user.name }}</p>
-                <p class="text-xs text-muted truncate">{{ $page.props.auth.user.email }}</p>
+            <div class="border-b border-base px-4 py-3 shrink-0 flex items-center" :class="collapsed ? 'justify-center' : 'gap-3'">
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-badge-primary-bg text-sm font-semibold text-badge-primary-text select-none">
+                    {{ $page.props.auth.user.name.charAt(0).toUpperCase() }}
+                </div>
+                <div v-if="!collapsed" class="min-w-0">
+                    <p class="text-sm font-medium text-primary truncate">{{ $page.props.auth.user.name }}</p>
+                    <p class="text-xs text-muted truncate">{{ $page.props.auth.user.email }}</p>
+                </div>
             </div>
 
             <nav class="flex-1 py-4 space-y-0.5" :class="collapsed ? 'px-2' : 'px-3 overflow-y-auto'">
@@ -279,9 +284,14 @@ const devNavItem = computed(() => {
                             </button>
                         </div>
 
-                        <div class="px-4 py-3 border-b border-base shrink-0">
-                            <p class="text-sm font-medium text-primary">{{ $page.props.auth.user.name }}</p>
-                            <p class="text-xs text-muted truncate">{{ $page.props.auth.user.email }}</p>
+                        <div class="px-4 py-3 border-b border-base shrink-0 flex items-center gap-3">
+                            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-badge-primary-bg text-sm font-semibold text-badge-primary-text select-none">
+                                {{ $page.props.auth.user.name.charAt(0).toUpperCase() }}
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-sm font-medium text-primary truncate">{{ $page.props.auth.user.name }}</p>
+                                <p class="text-xs text-muted truncate">{{ $page.props.auth.user.email }}</p>
+                            </div>
                         </div>
 
                         <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
