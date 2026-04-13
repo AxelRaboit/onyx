@@ -89,6 +89,7 @@ export default {
             subtitle: 'Update your name and email address.',
             fieldName: 'Name',
             fieldEmail: 'Email address',
+            fieldLocale: 'Language',
             unverified: 'Your email address is unverified.',
             resend: 'Click here to re-send the verification email.',
             verificationSent: 'A new verification link has been sent to your email address.',

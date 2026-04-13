@@ -85,6 +85,12 @@
     "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
     "You're logged in!": "You're logged in!",
     "Your email address is unverified.": "Your email address is unverified.",
-    "flash.note.updated": "Note saved.",
-    "flash.note.deleted": "Note deleted."
+    "admin.invitations.sent": "Invitation sent to :email.",
+    "mail.app_invitation.subject": "You're invited to join Onyx",
+    "mail.app_invitation.greeting": "Hello!",
+    "mail.app_invitation.action": "Log in",
+    "mail.app_invitation.credentials_intro": "Here are your login credentials:",
+    "mail.app_invitation.credential_email": "Email: **:email**",
+    "mail.app_invitation.credential_password": "Password: **:password**",
+    "mail.app_invitation.footer": "If you think you received this email by mistake, you can ignore it."
 }

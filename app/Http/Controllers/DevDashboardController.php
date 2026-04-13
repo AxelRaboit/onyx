@@ -61,7 +61,9 @@ class DevDashboardController extends Controller
     {
         if ($user->hasRole('ROLE_DEV')) {
             $user->removeRole('ROLE_DEV');
+            $user->assignRole('ROLE_USER');
         } else {
+            $user->removeRole('ROLE_USER');
             $user->assignRole('ROLE_DEV');
         }
 

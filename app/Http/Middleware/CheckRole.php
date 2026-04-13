@@ -16,7 +16,10 @@ class CheckRole
             return redirect()->route('login');
         }
 
-        if (! auth()->user()->hasRole($roleName)) {
+        $user = auth()->user();
+        $implied = $roleName === 'ROLE_USER' && $user->hasRole('ROLE_DEV');
+
+        if (! $implied && ! $user->hasRole($roleName)) {
             abort(HttpResponse::HTTP_FORBIDDEN, 'Unauthorized - insufficient role');
         }
 

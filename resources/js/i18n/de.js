@@ -89,6 +89,7 @@ export default {
             subtitle: 'Aktualisiere deinen Namen und deine E-Mail-Adresse.',
             fieldName: 'Name',
             fieldEmail: 'E-Mail-Adresse',
+            fieldLocale: 'Sprache',
             unverified: 'Deine E-Mail-Adresse ist nicht verifiziert.',
             resend: 'Klicke hier, um die Verifizierungs-E-Mail erneut zu senden.',
             verificationSent: 'Ein neuer Verifizierungslink wurde an deine E-Mail-Adresse gesendet.',
