@@ -58,27 +58,27 @@ const DEMO_NOTES = [
         date: '13 avr. 2025',
         content: `# Bienvenue dans Onyx
 
-Onyx est un **éditeur de notes** conçu pour organiser et connecter vos idées.
+Lorem ipsum dolor sit amet, **consectetur adipiscing** elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-## Explorer la démo
+## Lorem ipsum
 
-- [[Fonctionnalités de l'éditeur]] — tout ce que l'éditeur sait faire
-- [[Projet Atlas]] — un exemple de projet réel avec ses réunions et décisions techniques
-- [[Stack technique]] — les choix technologiques retenus
+- [[Fonctionnalités de l'éditeur]] — lorem ipsum dolor sit amet
+- [[Projet Atlas]] — consectetur adipiscing elit sed do eiusmod
+- [[Stack technique]] — tempor incididunt ut labore et dolore
 
-## Concept clé : les wiki-links
+## Dolor sit amet
 
-Les *wiki-links* permettent de relier n'importe quelle note à une autre avec la syntaxe \`[[Titre de la note]]\`. Les backlinks sont automatiquement calculés — cette note apparaît dans les backlinks de [[Projet Atlas]].
+*Lorem ipsum* dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco. Les backlinks sont automatiquement calculés — cette note apparaît dans les backlinks de [[Projet Atlas]].
 
 On peut aussi donner un alias : \`[[Projet Atlas|voir le projet]]\`.
 
 ---
 
-> [!tip] Conseil
+> [!tip] Lorem ipsum
 > Cliquez sur un lien wiki pour naviguer entre les notes de cette démo.
 
-> [!info] À savoir
-> Dans l'éditeur réel, les wiki-links ouvrent la note cible et les backlinks sont listés dans le panneau latéral.`,
+> [!info] Dolor sit amet
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor.`,
     },
     {
         id: 2,
@@ -97,72 +97,72 @@ On peut combiner : ***gras et italique***, ou **\`gras avec code\`**.
 ## Listes
 
 ### À puces
-- Premier élément
-- Deuxième avec **emphase**
-- Troisième
+- Lorem ipsum dolor sit amet
+- Consectetur **adipiscing** elit
+- Sed do eiusmod tempor
 
 ### Numérotée
-1. Étape initiale
-2. Étape intermédiaire
-3. Étape finale
+1. Lorem ipsum dolor
+2. Consectetur adipiscing
+3. Sed do eiusmod
 
 ### Cases à cocher
-- [x] Éditeur Markdown complet
-- [x] Wiki-links & backlinks
-- [x] Graphe de notes
-- [ ] Application mobile
+- [x] Lorem ipsum dolor sit amet
+- [x] Consectetur adipiscing elit
+- [x] Sed do eiusmod tempor
+- [ ] Incididunt ut labore
 
 ## Tableau
 
-| Fonctionnalité | Statut | Priorité |
+| Lorem | Ipsum | Dolor |
 | --- | --- | --- |
-| Wiki-links | ✅ Disponible | Haute |
-| Graphe | ✅ Disponible | Moyenne |
-| Templates | ✅ Disponible | Moyenne |
-| Recherche full-text | ⏳ En cours | Haute |
+| Sit amet | ✅ Consectetur | Haute |
+| Adipiscing | ✅ Elit sed | Moyenne |
+| Do eiusmod | ✅ Tempor | Moyenne |
+| Incididunt | ⏳ Labore | Haute |
 
 ---
 
 ## Callouts (12 types)
 
-> [!note] Note
-> Les callouts structurent l'information visuelle.
+> [!note] Lorem ipsum
+> Dolor sit amet consectetur adipiscing elit sed do eiusmod tempor.
 
-> [!tip] Astuce
-> Tapez \`/\` en début de ligne pour insérer un callout.
+> [!tip] Consectetur
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-> [!warning] Attention
-> Changer \`APP_KEY\` invalide toutes les données chiffrées en base.
+> [!warning] Adipiscing
+> Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-> [!danger] Critique
-> Ne jamais commiter des credentials en clair dans un dépôt.
+> [!danger] Dolor
+> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod.
 
-> [!success] Succès
-> Tous les tests passent : **117/117** en 7.65 secondes.
+> [!success] Sit amet
+> Lorem ipsum dolor : **117/117** consectetur adipiscing elit.
 
-> [!bug] Bug connu
-> Sur Safari iOS, le curseur peut sauter lors d'une insertion via slash command.
+> [!bug] Eiusmod
+> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod.
 
-> [!question] Question
-> Quelle stack pour l'application mobile — React Native, Flutter ou Capacitor ?
+> [!question] Tempor
+> Lorem ipsum dolor sit amet — consectetur adipiscing elit sed do eiusmod ?
 
 > [!example] Exemple
 > Voir la section **Bloc de code** de [[Stack technique]] pour un exemple concret.
 
 > [!info] Info
-> Cette note couvre la mise en forme, les listes et les callouts de base.
+> Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor.
 
-> [!quote] Citation
-> "La simplicité est la sophistication suprême."
-> — Leonardo da Vinci
+> [!quote] Lorem
+> "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+> — Cicéron (adapté)
 
 > [!todo] À faire
-> - [ ] Relire la documentation de l'API
-> - [ ] Écrire les tests d'intégration
-> - [x] Configurer le CI/CD
+> - [ ] Lorem ipsum dolor sit amet
+> - [ ] Consectetur adipiscing elit
+> - [x] Sed do eiusmod tempor
 
-> [!failure] Échec
-> Le build de nuit a échoué suite à un timeout sur les tests E2E.`,
+> [!failure] Incididunt
+> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor.`,
     },
     {
         id: 3,
@@ -171,35 +171,35 @@ On peut combiner : ***gras et italique***, ou **\`gras avec code\`**.
         date: '11 avr. 2025',
         content: `# Projet Atlas
 
-Refonte complète de l'interface client. Voir [[Réunion du 10 avril]] pour le dernier compte-rendu et [[Stack technique]] pour les choix technologiques.
+Lorem ipsum dolor sit amet consectetur adipiscing elit. Voir [[Réunion du 10 avril]] pour le dernier compte-rendu et [[Stack technique]] pour les choix technologiques.
 
 ## Avancement
 
-- [x] Cadrage et spécifications
-- [x] Mise en place de l'environnement
-- [x] Prototype UI validé
-- [ ] Intégration API
-- [ ] Tests et recette
-- [ ] Mise en production
+- [x] Lorem ipsum dolor sit amet
+- [x] Consectetur adipiscing elit
+- [x] Sed do eiusmod tempor
+- [ ] Incididunt ut labore
+- [ ] Dolore magna aliqua
+- [ ] Ut enim ad minim
 
 ## Équipe
 
 | Membre | Rôle |
 | --- | --- |
-| Alice | Lead développeuse |
-| Bob | Designer UI/UX |
-| Charlie | Product manager |
+| Alice | Lorem ipsum |
+| Bob | Dolor sit amet |
+| Charlie | Consectetur elit |
 
 ---
 
 > [!todo] Cette semaine
-> Finaliser l'intégration OAuth et ouvrir les PR de révision avant vendredi.
+> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor.
 
 > [!warning] Point de vigilance
-> Les délais sont serrés — pas de fonctionnalités supplémentaires sans arbitrage du PM.
+> Consectetur adipiscing — sed do eiusmod tempor incididunt ut labore et dolore.
 
 > [!danger] Blocage
-> Dépendance externe non livrée — contacter le fournisseur avant vendredi.`,
+> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor.`,
     },
     {
         id: 4,
@@ -208,39 +208,39 @@ Refonte complète de l'interface client. Voir [[Réunion du 10 avril]] pour le d
         date: '10 avr. 2025',
         content: `# Réunion du 10 avril
 
-Compte-rendu de la réunion de suivi — [[Projet Atlas]].
+Lorem ipsum dolor sit amet consectetur adipiscing — [[Projet Atlas]].
 
 ## Participants
 
-- Alice (lead dev)
-- Bob (design)
-- Charlie (PM)
+- Alice (lorem ipsum)
+- Bob (dolor sit)
+- Charlie (amet)
 
 ## Points abordés
 
-1. Revue du prototype — validé avec quelques ajustements UX
-2. Planning de la semaine à venir
-3. Discussion sur la [[Stack technique]]
+1. Lorem ipsum dolor sit amet consectetur
+2. Adipiscing elit sed do eiusmod tempor
+3. Incididunt ut labore et [[Stack technique]]
 
 ---
 
 ## Décisions
 
-> [!note] Décision prise
-> Adoption de Vue 3 + Inertia.js pour le frontend. Voir [[Stack technique]] pour le détail.
+> [!note] Lorem ipsum
+> Dolor sit amet consectetur adipiscing elit. Voir [[Stack technique]] pour le détail.
 
-> [!warning] Point de vigilance
-> Les délais sont serrés — pas de fonctionnalités supplémentaires sans arbitrage du PM.
+> [!warning] Consectetur
+> Lorem ipsum — sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## Actions
 
-- [ ] Alice : PR d'intégration auth pour jeudi
-- [ ] Bob : maquettes des états vides pour lundi
-- [x] Charlie : mise à jour du backlog Notion
+- [ ] Alice : lorem ipsum dolor sit amet
+- [ ] Bob : consectetur adipiscing elit lundi
+- [x] Charlie : sed do eiusmod tempor
 
 ## Citation
 
-> "On n'a pas le temps de faire les choses bien, mais on a toujours le temps de les refaire."`,
+> "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor."`,
     },
     {
         id: 5,
@@ -249,20 +249,20 @@ Compte-rendu de la réunion de suivi — [[Projet Atlas]].
         date: '9 avr. 2025',
         content: `# Stack technique
 
-Décisions techniques pour [[Projet Atlas]]. Validées en [[Réunion du 10 avril]].
+Lorem ipsum dolor sit amet pour [[Projet Atlas]]. Validées en [[Réunion du 10 avril]].
 
 ## Architecture
 
 \`\`\`
-Laravel 13  →  Inertia.js  →  Vue 3
+Lorem ipsum  →  Dolor sit  →  Amet
                                 ↓
-                          Tailwind CSS 4
+                          Consectetur 4
 \`\`\`
 
-## Exemple — Composable Vue 3
+## Exemple — Lorem ipsum
 
 \`\`\`javascript
-export function useCounter(initial = 0) {
+export function useLoremIpsum(initial = 0) {
     const count = ref(initial)
     const double = computed(() => count.value * 2)
     function increment() { count.value++ }
@@ -274,21 +274,21 @@ export function useCounter(initial = 0) {
 
 | Couche | Choix | Raison |
 | --- | --- | --- |
-| Backend | Laravel 13 | Maturité, écosystème |
-| Frontend | Vue 3 | Réactivité fine, Composition API |
-| CSS | Tailwind 4 | Vélocité, cohérence |
-| Auth | Laravel Breeze | Simple, suffisant |
+| Lorem | Ipsum 13 | Dolor sit amet |
+| Consectetur | Adipiscing 3 | Sed do eiusmod |
+| Tempor | Incididunt 4 | Ut labore et |
+| Dolore | Magna aliqua | Ut enim ad |
 
 ---
 
-> [!tip] Bonne pratique
-> Utiliser la Composition API partout — plus testable et composable que l'Options API.
+> [!tip] Lorem ipsum
+> Dolor sit amet consectetur adipiscing elit — sed do eiusmod tempor incididunt.
 
 > [!bug] Connu
-> Sur Safari iOS, le curseur peut sauter lors d'une insertion via slash command.
+> Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor.
 
 > [!success] Résultat
-> Stack validée par l'équipe lors de la [[Réunion du 10 avril]].`,
+> Lorem ipsum validé lors de la [[Réunion du 10 avril]].`,
     },
 ];
 
