@@ -80,6 +80,9 @@ migrate: ## Run pending migrations
 sync-params: ## Synchronise application parameters (creates missing, deletes obsolete)
 	$(ARTISAN) onyx:application-parameter
 
+create-roles: ## Create application roles (ROLE_DEV, ROLE_USER)
+	$(ARTISAN) onyx:create-roles
+
 migrate-fresh: ## Drop all tables and re-run all migrations
 	$(ARTISAN) migrate:fresh
 
@@ -252,6 +255,7 @@ deploy-prod: ## Deploy to production (requires git tag on HEAD, use FORCE=1 to b
 		make cc-prod; \
 		$(ARTISAN) migrate --force; \
 		$(ARTISAN) onyx:application-parameter; \
+		$(ARTISAN) onyx:create-roles; \
 		$(ARTISAN) storage:link --force; \
 		$(PNPM) install --frozen-lockfile; \
 		$(PNPM) build; \
