@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Spatie\Permission\Models\Role;
+
+class CreateRolesCommand extends Command
+{
+    protected $signature = 'onyx:create-roles';
+
+    protected $description = 'Create application roles (ROLE_DEV, ROLE_USER) if they do not exist.';
+
+    public function handle(): int
+    {
+        $roles = ['ROLE_DEV', 'ROLE_USER'];
+
+        foreach ($roles as $role) {
+            $created = Role::firstOrCreate(['name' => $role, 'guard_name' => 'web'])->wasRecentlyCreated;
+            $status = $created ? '<info>created</info>' : '<comment>already exists</comment>';
+            $this->line(sprintf('  %s : %s', $role, $status));
+        }
+
+        $this->info('Roles OK.');
+
+        return self::SUCCESS;
+    }
+}
