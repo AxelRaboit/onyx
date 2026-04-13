@@ -8,4 +8,14 @@ return [
         'closing'   => 'Prenez soin de vous.',
         'signature' => 'L\'équipe :app',
     ],
+
+    'app_invitation' => [
+        'subject'            => 'Vous avez été invité sur Onyx',
+        'greeting'           => 'Bonjour !',
+        'credentials_intro'  => 'Voici vos identifiants de connexion :',
+        'credential_email'   => 'E-mail : :email',
+        'credential_password' => 'Mot de passe : :password',
+        'action'             => 'Accéder à Onyx',
+        'footer'             => "Si vous n'attendiez pas cette invitation, vous pouvez ignorer cet e-mail.",
+    ],
 ];

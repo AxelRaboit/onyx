@@ -77,6 +77,9 @@ stop: ## Stop mailcatcher
 migrate: ## Run pending migrations
 	$(ARTISAN) migrate
 
+sync-params: ## Synchronise application parameters (creates missing, deletes obsolete)
+	$(ARTISAN) onyx:application-parameter
+
 migrate-fresh: ## Drop all tables and re-run all migrations
 	$(ARTISAN) migrate:fresh
 
@@ -248,6 +251,7 @@ deploy-prod: ## Deploy to production (requires git tag on HEAD, use FORCE=1 to b
 		$(COMPOSER) install --no-dev --optimize-autoloader; \
 		make cc-prod; \
 		$(ARTISAN) migrate --force; \
+		$(ARTISAN) onyx:application-parameter; \
 		$(ARTISAN) storage:link --force; \
 		$(PNPM) install --frozen-lockfile; \
 		$(PNPM) build; \

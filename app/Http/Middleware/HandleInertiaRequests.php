@@ -40,6 +40,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'locale' => $user !== null ? $user->locale : config('app.fallback_locale', 'en'),
             'appVersion' => file_exists(base_path('VERSION')) ? trim(file_get_contents(base_path('VERSION'))) : 'dev',
+            'isLocal' => app()->isLocal(),
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),

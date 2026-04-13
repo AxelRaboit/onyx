@@ -6,6 +6,8 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import {
     LayoutDashboard,
+    NotebookPen,
+    BookOpen,
     Shield,
     Sun,
     Moon,
@@ -15,6 +17,7 @@ import {
     X,
     ChevronsLeft,
     ChevronsRight,
+    Mail,
 } from 'lucide-vue-next';
 
 const { t } = useI18n();
@@ -36,9 +39,22 @@ const navItems = [
         match: 'dashboard',
         icon: LayoutDashboard,
     },
+    {
+        key: 'notes',
+        route: 'notes.index',
+        match: 'notes.*',
+        icon: NotebookPen,
+    },
+    {
+        key: 'guide',
+        route: 'guide',
+        match: 'guide',
+        icon: BookOpen,
+    },
 ];
 
 const isDev = computed(() => page.props.auth?.user?.roles?.some(r => r.name === 'ROLE_DEV') ?? false);
+const isLocal = computed(() => page.props.isLocal ?? false);
 const devNavItem = computed(() => {
     if (!isDev.value) return null;
     return {
@@ -147,6 +163,24 @@ const devNavItem = computed(() => {
                 >
                     <ChevronsRight class="w-4 h-4" />
                 </button>
+
+                <a
+                    v-if="isLocal"
+                    href="http://localhost:8025"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center rounded-lg text-sm font-medium text-secondary hover:text-amber-400 hover:bg-amber-500/10 transition-colors group relative"
+                    :class="collapsed ? 'justify-center py-2.5' : 'gap-3 px-3 py-2.5'"
+                >
+                    <Mail class="w-5 h-5 shrink-0 text-muted group-hover:text-amber-400 transition-colors" />
+                    <span v-if="!collapsed">Mailpit</span>
+                    <span
+                        v-if="collapsed"
+                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-base text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
+                    >
+                        Mailpit
+                    </span>
+                </a>
 
                 <button
                     class="flex items-center rounded-lg text-sm font-medium text-secondary hover:text-primary hover:bg-surface-2 transition-colors w-full group relative"
@@ -288,6 +322,17 @@ const devNavItem = computed(() => {
                         </nav>
 
                         <div class="shrink-0 border-t border-base px-3 py-3 space-y-1">
+                            <a
+                                v-if="isLocal"
+                                href="http://localhost:8025"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-secondary hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
+                                v-on:click="showMobileMenu = false"
+                            >
+                                <Mail class="w-5 h-5 text-muted shrink-0" />
+                                Mailpit
+                            </a>
                             <button
                                 class="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-secondary hover:text-primary hover:bg-surface-2 transition-colors"
                                 v-on:click="toggleTheme"

@@ -3,10 +3,12 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import AppBadge from '@/components/ui/AppBadge.vue';
 import AppPageHeader from '@/components/ui/AppPageHeader.vue';
 import AppPagination from '@/components/ui/AppPagination.vue';
+import ConfirmModal from '@/components/ui/ConfirmModal.vue';
+import EmptyState from '@/components/ui/EmptyState.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import { Shield, Trash2, UserRound } from 'lucide-vue-next';
+import { Check, Mail, NotebookText, Pencil, Shield, Trash2, UserRound, Users, X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const { t } = useI18n();
 
@@ -15,134 +17,448 @@ const props = defineProps({
     stats: { type: Object, default: null },
     users: { type: Object, default: null },
     search: { type: String, default: '' },
+    parameters: { type: Array, default: () => [] },
+    parameterUpdatePath: { type: String, default: '' },
 });
 
-const searchQuery = ref(props.search);
+// ── Tab nav scroll ───────────────────────────────────────────────────────────
 
-function searchUsers() {
-    router.get(route('dev.dashboard.users'), { search: searchQuery.value }, { preserveState: true });
-}
+const tabNav = ref(null);
+onMounted(() => {
+    const active = tabNav.value?.querySelector('[aria-current="page"]');
+    active?.scrollIntoView({ block: 'nearest', inline: 'center' });
+});
 
-function toggleRole(user) {
-    router.post(route('dev.dashboard.users.toggle-role', user.id));
-}
+// ── Users tab ────────────────────────────────────────────────────────────────
 
-const deleteForm = useForm({});
-function destroyUser(user) {
-    if (confirm(`Delete user ${user.name}?`)) {
-        deleteForm.delete(route('dev.dashboard.users.destroy', user.id));
+const searchInput = ref(props.search);
+const performSearch = () => {
+    router.get(route('dev.dashboard.users'), { search: searchInput.value });
+};
+
+const pendingToggleUser = ref(null);
+const doToggleRole = () => {
+    if (!pendingToggleUser.value) return;
+    useForm({}).post(route('dev.dashboard.users.toggle-role', pendingToggleUser.value.id));
+    pendingToggleUser.value = null;
+};
+
+const pendingDeleteUser = ref(null);
+const doDeleteUser = () => {
+    if (!pendingDeleteUser.value) return;
+    useForm({}).delete(route('dev.dashboard.users.destroy', pendingDeleteUser.value.id));
+    pendingDeleteUser.value = null;
+};
+
+// ── Parameters tab ───────────────────────────────────────────────────────────
+
+const editingKey = ref(null);
+const editingValue = ref('');
+const editSaving = ref(false);
+
+const startEdit = (param) => {
+    editingKey.value = param.key;
+    editingValue.value = param.value ?? '';
+};
+
+const cancelEdit = () => {
+    editingKey.value = null;
+};
+
+const saveParameter = async (param) => {
+    if (editSaving.value) return;
+    editSaving.value = true;
+    const url = props.parameterUpdatePath.replace('__key__', encodeURIComponent(param.key));
+    try {
+        const res = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+            },
+            body: JSON.stringify({ value: editingValue.value }),
+        });
+        if (res.ok) {
+            param.value = editingValue.value || null;
+            editingKey.value = null;
+        }
+    } finally {
+        editSaving.value = false;
     }
-}
+};
+
+// ── Invitations tab ──────────────────────────────────────────────────────────
+
+const invitationForm = useForm({
+    email: '',
+    message: '',
+    credential_email: '',
+    credential_password: '',
+});
+
+const submitInvitation = () => {
+    invitationForm.post(route('dev.dashboard.invitations.send'), {
+        onSuccess: () => invitationForm.reset(),
+    });
+};
 </script>
 
 <template>
-    <Head title="Dev Dashboard" />
+    <Head :title="t('admin.title')" />
 
     <AuthenticatedLayout>
         <template #header>
-            <AppPageHeader title="Dev Dashboard" />
+            <AppPageHeader :title="t('admin.title')" />
         </template>
 
         <div class="space-y-6">
             <!-- Tabs -->
-            <div class="flex gap-2 border-b border-base">
-                <Link
-                    :href="route('dev.dashboard.stats')"
-                    class="px-4 py-2 text-sm font-medium transition-colors"
-                    :class="tab === 'stats' ? 'text-indigo-400 border-b-2 border-indigo-400' : 'text-secondary hover:text-primary'"
-                >
-                    Stats
-                </Link>
-                <Link
-                    :href="route('dev.dashboard.users')"
-                    class="px-4 py-2 text-sm font-medium transition-colors"
-                    :class="tab === 'users' ? 'text-indigo-400 border-b-2 border-indigo-400' : 'text-secondary hover:text-primary'"
-                >
-                    Users
-                </Link>
+            <div class="border-b border-base overflow-x-auto">
+                <nav ref="tabNav" class="flex gap-6 sm:gap-8 whitespace-nowrap min-w-max">
+                    <Link
+                        :href="route('dev.dashboard.stats')"
+                        :aria-current="tab === 'stats' ? 'page' : undefined"
+                        class="py-3 px-1 border-b-2 transition-colors text-sm font-medium"
+                        :class="tab === 'stats' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
+                    >
+                        {{ t('admin.stats.title') }}
+                    </Link>
+                    <Link
+                        :href="route('dev.dashboard.users')"
+                        :aria-current="tab === 'users' ? 'page' : undefined"
+                        class="py-3 px-1 border-b-2 transition-colors text-sm font-medium"
+                        :class="tab === 'users' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
+                    >
+                        {{ t('admin.users.title') }}
+                    </Link>
+                    <Link
+                        :href="route('dev.dashboard.invitations')"
+                        :aria-current="tab === 'invitations' ? 'page' : undefined"
+                        class="py-3 px-1 border-b-2 transition-colors text-sm font-medium"
+                        :class="tab === 'invitations' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
+                    >
+                        {{ t('admin.invitations.title') }}
+                    </Link>
+                    <Link
+                        :href="route('dev.dashboard.parameters')"
+                        :aria-current="tab === 'parameters' ? 'page' : undefined"
+                        class="py-3 px-1 border-b-2 transition-colors text-sm font-medium"
+                        :class="tab === 'parameters' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
+                    >
+                        {{ t('admin.parameters.title') }}
+                    </Link>
+                </nav>
             </div>
 
             <!-- Stats tab -->
             <div v-if="tab === 'stats' && stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="bg-surface rounded-xl p-5 shadow">
-                    <div class="flex items-center gap-3">
-                        <UserRound class="w-5 h-5 text-indigo-400" />
-                        <div>
-                            <p class="text-xs text-muted uppercase tracking-wider">Total Users</p>
-                            <p class="text-2xl font-bold text-primary">{{ stats.users }}</p>
+                <div class="bg-surface border border-base rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ t('admin.stats.usersTotal') }}</span>
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
+                            <Users class="w-4 h-4 text-indigo-400" />
                         </div>
                     </div>
+                    <p class="text-2xl font-bold text-indigo-400">{{ stats.users.total }}</p>
+                    <p class="text-xs text-secondary mt-1.5">
+                        <span class="text-indigo-400 font-medium">+{{ stats.users.newThisMonth }}</span>
+                        {{ ' ' + t('admin.stats.usersNewThisMonth').toLowerCase() }}
+                    </p>
+                </div>
+
+                <div class="bg-surface border border-base rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ t('admin.stats.notesTotal') }}</span>
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
+                            <NotebookText class="w-4 h-4 text-indigo-400" />
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-indigo-400">{{ stats.notes }}</p>
+                    <p class="text-xs text-secondary mt-1.5">{{ t('admin.stats.notes') }}</p>
                 </div>
             </div>
 
             <!-- Users tab -->
-            <div v-if="tab === 'users'">
-                <div class="mb-4 flex gap-2">
+            <div v-if="tab === 'users'" class="space-y-4">
+                <div class="flex flex-col sm:flex-row gap-2">
                     <input
-                        v-model="searchQuery"
+                        v-model="searchInput"
                         type="text"
-                        placeholder="Search users..."
-                        class="flex-1 rounded-lg border border-base bg-surface-2 px-3 py-2 text-sm text-primary placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        v-on:keydown.enter="searchUsers"
-                    />
-                    <button
-                        class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition-colors"
-                        v-on:click="searchUsers"
+                        :placeholder="t('admin.users.searchPlaceholder')"
+                        class="flex-1 px-4 py-2 rounded-lg bg-surface-2 border border-base text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        v-on:keyup.enter="performSearch"
                     >
-                        Search
+                    <button
+                        class="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-sm font-medium"
+                        v-on:click="performSearch"
+                    >
+                        {{ t('admin.users.search') }}
                     </button>
                 </div>
 
-                <div v-if="users" class="bg-surface rounded-xl overflow-hidden shadow">
-                    <table class="min-w-full divide-y divide-subtle">
-                        <thead>
-                            <tr class="bg-surface-2/50">
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Name</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Email</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Roles</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted">Joined</th>
-                                <th class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-muted">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-subtle">
-                            <tr v-for="user in users.data" :key="user.id" class="hover:bg-surface-2/30 transition-colors">
-                                <td class="px-4 py-3 text-sm text-primary">{{ user.name }}</td>
-                                <td class="px-4 py-3 text-sm text-secondary">{{ user.email }}</td>
-                                <td class="px-4 py-3">
-                                    <div class="flex flex-wrap gap-1">
-                                        <AppBadge v-for="role in user.roles" :key="role.id" variant="primary">
-                                            {{ role.name }}
-                                        </AppBadge>
-                                    </div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-muted">{{ new Date(user.created_at).toLocaleDateString() }}</td>
-                                <td class="px-4 py-3 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <button
-                                            class="text-indigo-400 hover:text-indigo-300 transition-colors"
-                                            :title="user.roles?.some(r => r.name === 'ROLE_DEV') ? 'Remove ROLE_DEV' : 'Grant ROLE_DEV'"
-                                            v-on:click="toggleRole(user)"
-                                        >
-                                            <Shield class="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            class="text-rose-400 hover:text-rose-300 transition-colors"
-                                            title="Delete user"
-                                            v-on:click="destroyUser(user)"
-                                        >
-                                            <Trash2 class="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <EmptyState v-if="users && users.data.length === 0" icon="search" :message="t('admin.users.empty')" />
 
-                    <div class="px-4 py-3 border-t border-subtle">
-                        <AppPagination :links="users.links" />
+                <template v-if="users && users.data.length > 0">
+                    <!-- Mobile cards -->
+                    <div class="sm:hidden space-y-3">
+                        <div v-for="user in users.data" :key="user.id" class="bg-surface border border-base rounded-lg p-4 space-y-3">
+                            <div class="min-w-0">
+                                <p class="font-medium text-primary truncate">{{ user.name }}</p>
+                                <p class="text-xs text-secondary truncate">{{ user.email }}</p>
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                <AppBadge v-for="role in user.roles" :key="role.id" variant="indigo">
+                                    {{ role.name }}
+                                </AppBadge>
+                            </div>
+                            <div class="flex items-center justify-between pt-1 border-t border-base">
+                                <p class="text-xs text-muted">{{ new Date(user.created_at).toLocaleDateString() }}</p>
+                                <div class="flex items-center gap-1">
+                                    <button
+                                        class="p-1.5 rounded text-muted transition-colors"
+                                        :class="user.roles?.some(r => r.name === 'ROLE_DEV') ? 'hover:text-indigo-400' : 'hover:text-rose-400'"
+                                        v-on:click="pendingToggleUser = user"
+                                    >
+                                        <component :is="user.roles?.some(r => r.name === 'ROLE_DEV') ? UserRound : Shield" class="w-4 h-4" />
+                                    </button>
+                                    <button class="p-1.5 rounded text-muted hover:text-red-400 transition-colors" v-on:click="pendingDeleteUser = user">
+                                        <Trash2 class="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Desktop table -->
+                    <div class="hidden sm:block bg-surface border border-base rounded-lg overflow-x-auto">
+                        <table class="w-full min-w-[560px]">
+                            <thead class="bg-surface-2 border-b border-base">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary">{{ t('admin.users.name') }}</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden sm:table-cell">{{ t('admin.users.email') }}</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden md:table-cell">{{ t('admin.users.roles') }}</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden lg:table-cell">{{ t('admin.users.created') }}</th>
+                                    <th class="px-4 py-3 text-right text-sm font-semibold text-primary">{{ t('admin.users.actions') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-base">
+                                <tr v-for="user in users.data" :key="user.id" class="hover:bg-surface-2/50 transition-colors">
+                                    <td class="px-4 py-3 text-sm font-medium text-primary">{{ user.name }}</td>
+                                    <td class="px-4 py-3 text-sm text-secondary hidden sm:table-cell">{{ user.email }}</td>
+                                    <td class="px-4 py-3 hidden md:table-cell">
+                                        <div class="flex flex-wrap gap-1">
+                                            <AppBadge v-for="role in user.roles" :key="role.id" variant="indigo">
+                                                {{ role.name }}
+                                            </AppBadge>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-secondary hidden lg:table-cell">{{ new Date(user.created_at).toLocaleDateString() }}</td>
+                                    <td class="px-4 py-3 text-right">
+                                        <div class="flex items-center justify-end gap-1">
+                                            <button
+                                                class="p-1.5 rounded text-muted transition-colors"
+                                                :class="user.roles?.some(r => r.name === 'ROLE_DEV') ? 'hover:text-indigo-400' : 'hover:text-rose-400'"
+                                                :title="user.roles?.some(r => r.name === 'ROLE_DEV') ? t('admin.users.makeUser') : t('admin.users.makeDev')"
+                                                v-on:click="pendingToggleUser = user"
+                                            >
+                                                <component :is="user.roles?.some(r => r.name === 'ROLE_DEV') ? UserRound : Shield" class="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                class="p-1.5 rounded text-muted hover:text-red-400 transition-colors"
+                                                :title="t('admin.users.deleteUser', { name: user.name })"
+                                                v-on:click="pendingDeleteUser = user"
+                                            >
+                                                <Trash2 class="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="px-4 py-3 border-t border-base">
+                            <AppPagination :meta="users" />
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Invitations tab -->
+            <div v-if="tab === 'invitations'" class="max-w-lg space-y-4">
+                <p class="text-sm text-secondary">{{ t('admin.invitations.description') }}</p>
+
+                <form class="space-y-4" v-on:submit.prevent="submitInvitation">
+                    <div class="space-y-1">
+                        <label class="block text-sm font-medium text-primary">{{ t('admin.invitations.email') }}</label>
+                        <input
+                            v-model="invitationForm.email"
+                            type="email"
+                            :placeholder="t('admin.invitations.emailPlaceholder')"
+                            class="w-full px-4 py-2 rounded-lg bg-surface-2 border border-base text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        >
+                        <p v-if="invitationForm.errors.email" class="text-xs text-red-400">{{ invitationForm.errors.email }}</p>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-sm font-medium text-primary">{{ t('admin.invitations.message') }}</label>
+                        <textarea
+                            v-model="invitationForm.message"
+                            rows="5"
+                            :placeholder="t('admin.invitations.messagePlaceholder')"
+                            class="w-full px-4 py-2 rounded-lg bg-surface-2 border border-base text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                        />
+                        <p v-if="invitationForm.errors.message" class="text-xs text-red-400">{{ invitationForm.errors.message }}</p>
+                    </div>
+
+                    <div class="border border-base rounded-lg p-4 space-y-3 bg-surface-2/50">
+                        <p class="text-xs text-secondary">{{ t('admin.invitations.credentialsHint') }}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="space-y-1">
+                                <label class="block text-sm font-medium text-primary">{{ t('admin.invitations.credentialEmail') }}</label>
+                                <input
+                                    v-model="invitationForm.credential_email"
+                                    type="email"
+                                    :placeholder="t('admin.invitations.emailPlaceholder')"
+                                    class="w-full px-4 py-2 rounded-lg bg-surface border border-base text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                >
+                                <p v-if="invitationForm.errors.credential_email" class="text-xs text-red-400">{{ invitationForm.errors.credential_email }}</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-sm font-medium text-primary">{{ t('admin.invitations.credentialPassword') }}</label>
+                                <input
+                                    v-model="invitationForm.credential_password"
+                                    type="text"
+                                    class="w-full px-4 py-2 rounded-lg bg-surface border border-base text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                >
+                                <p v-if="invitationForm.errors.credential_password" class="text-xs text-red-400">{{ invitationForm.errors.credential_password }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        :disabled="invitationForm.processing || !invitationForm.email"
+                        class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm font-medium"
+                    >
+                        <Mail class="w-4 h-4" />
+                        {{ invitationForm.processing ? t('admin.invitations.sending') : t('admin.invitations.send') }}
+                    </button>
+                </form>
+            </div>
+
+            <!-- Parameters tab -->
+            <div v-if="tab === 'parameters'" class="space-y-3">
+                <EmptyState v-if="parameters.length === 0" icon="settings" :message="t('admin.parameters.empty')" />
+
+                <template v-else>
+                    <!-- Mobile cards -->
+                    <div class="sm:hidden space-y-3">
+                        <div v-for="param in parameters" :key="param.key" class="bg-surface border border-base rounded-lg p-4 space-y-2">
+                            <div class="flex items-start justify-between gap-3">
+                                <p class="font-mono text-sm text-indigo-400 font-medium break-all">{{ param.key }}</p>
+                                <button v-if="editingKey !== param.key" class="p-1.5 text-muted hover:text-primary transition-colors shrink-0" v-on:click="startEdit(param)">
+                                    <Pencil class="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                            <template v-if="editingKey === param.key">
+                                <input
+                                    v-model="editingValue"
+                                    class="w-full bg-surface-2 border border-base rounded-lg px-2.5 py-1.5 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    autofocus
+                                    v-on:keydown.enter="saveParameter(param)"
+                                    v-on:keydown.esc="cancelEdit"
+                                >
+                                <div class="flex gap-2">
+                                    <button :disabled="editSaving" class="flex-1 py-1.5 text-sm bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg transition-colors" v-on:click="saveParameter(param)">
+                                        {{ t('common.save') }}
+                                    </button>
+                                    <button class="flex-1 py-1.5 text-sm text-secondary hover:text-primary border border-base rounded-lg transition-colors" v-on:click="cancelEdit">
+                                        {{ t('common.cancel') }}
+                                    </button>
+                                </div>
+                            </template>
+                            <p v-else class="text-sm font-medium text-primary">{{ param.value ?? '—' }}</p>
+                            <p v-if="param.description" class="text-xs text-secondary">{{ param.description }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Desktop table -->
+                    <div class="hidden sm:block bg-surface border border-base rounded-xl overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-surface-2 border-b border-base">
+                                <tr>
+                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary w-1/3">{{ t('admin.parameters.key') }}</th>
+                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary w-1/4">{{ t('admin.parameters.value') }}</th>
+                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary">{{ t('admin.parameters.description') }}</th>
+                                    <th class="px-4 py-3 w-16" />
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-base">
+                                <tr
+                                    v-for="param in parameters"
+                                    :key="param.key"
+                                    class="group hover:bg-surface-2/50 transition-colors"
+                                >
+                                    <td class="px-5 py-3 font-mono text-sm text-indigo-400 font-medium w-1/3">{{ param.key }}</td>
+                                    <td class="px-5 py-3 w-1/4">
+                                        <template v-if="editingKey === param.key">
+                                            <input
+                                                v-model="editingValue"
+                                                class="w-full bg-surface-2 border border-base rounded-lg px-2.5 py-1 text-sm text-primary focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                                autofocus
+                                                v-on:keydown.enter="saveParameter(param)"
+                                                v-on:keydown.esc="cancelEdit"
+                                            >
+                                        </template>
+                                        <span v-else class="text-sm font-medium text-primary">{{ param.value ?? '—' }}</span>
+                                    </td>
+                                    <td class="px-5 py-3 text-sm text-secondary">{{ param.description ?? '' }}</td>
+                                    <td class="px-4 py-3 w-16">
+                                        <div class="flex items-center gap-1 justify-end">
+                                            <template v-if="editingKey === param.key">
+                                                <button
+                                                    :disabled="editSaving"
+                                                    class="p-1.5 text-muted hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    v-on:click="saveParameter(param)"
+                                                >
+                                                    <Check class="w-3.5 h-3.5" />
+                                                </button>
+                                                <button class="p-1.5 text-muted hover:text-rose-400 transition-colors" v-on:click="cancelEdit">
+                                                    <X class="w-3.5 h-3.5" />
+                                                </button>
+                                            </template>
+                                            <button
+                                                v-else
+                                                class="p-1.5 text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100"
+                                                v-on:click="startEdit(param)"
+                                            >
+                                                <Pencil class="w-3.5 h-3.5" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </template>
             </div>
         </div>
     </AuthenticatedLayout>
+
+    <ConfirmModal
+        :show="!!pendingToggleUser"
+        :message="pendingToggleUser ? t('admin.users.confirmToggle', { name: pendingToggleUser.name }) : ''"
+        :confirm-label="pendingToggleUser?.roles?.some(r => r.name === 'ROLE_DEV') ? t('admin.users.makeUser') : t('admin.users.makeDev')"
+        confirm-variant="indigo"
+        v-on:confirm="doToggleRole"
+        v-on:cancel="pendingToggleUser = null"
+    />
+
+    <ConfirmModal
+        :show="!!pendingDeleteUser"
+        :message="pendingDeleteUser ? t('admin.users.confirmDelete', { name: pendingDeleteUser.name }) : ''"
+        confirm-variant="danger"
+        v-on:confirm="doDeleteUser"
+        v-on:cancel="pendingDeleteUser = null"
+    />
 </template>
