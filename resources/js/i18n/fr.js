@@ -89,6 +89,7 @@ export default {
             subtitle: 'Mettez à jour votre nom et adresse e-mail.',
             fieldName: 'Nom',
             fieldEmail: 'Adresse e-mail',
+            fieldLocale: 'Langue',
             unverified: "Votre adresse e-mail n'est pas vérifiée.",
             resend: "Renvoyer l'e-mail de vérification.",
             verificationSent: 'Un nouveau lien de vérification a été envoyé à votre adresse e-mail.',
