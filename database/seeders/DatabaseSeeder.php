@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
                 'locale'            => 'fr',
             ]
         );
-        $axel->syncRoles([$roleDev, $roleUser]);
+        $axel->syncRoles([$roleDev]);
 
         // ── Regular users ─────────────────────────────────────────────────────
         $alice = User::firstOrCreate(
