@@ -1,0 +1,114 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* ── Dashboard card bubble animations ───────────────────────────────────────── */
+@keyframes bubble-float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%       { transform: translate(-6px, -8px) scale(1.05); }
+}
+@keyframes bubble-float-alt {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%       { transform: translate(6px, 8px) scale(1.08); }
+}
+.bubble-1 { animation: bubble-float     7s ease-in-out infinite; }
+.bubble-2 { animation: bubble-float-alt 9s ease-in-out infinite; }
+
+/* ── Semantic color tokens ───────────────────────────────────────────────────
+   RGB format (no commas) so Tailwind opacity modifiers work: bg-surface/50
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+    /* Backgrounds */
+    --color-bg:        249 250 251; /* gray-50  */
+    --color-surface:   255 255 255; /* white    */
+    --color-surface-2: 243 244 246; /* gray-100 */
+    --color-surface-3: 229 231 235; /* gray-200 */
+
+    /* Borders */
+    --color-border:        229 231 235; /* gray-200 */
+    --color-border-strong: 209 213 219; /* gray-300 */
+    --color-border-subtle: 243 244 246; /* gray-100 */
+
+    /* Text */
+    --color-text-primary:    17  24  39; /* gray-900 */
+    --color-text-secondary: 107 114 128; /* gray-500 */
+    --color-text-muted:     156 163 175; /* gray-400 */
+    --color-text-subtle:    209 213 219; /* gray-300 */
+
+    /* Badge backgrounds & text (icon circles + inline text badges) */
+    --color-badge-danger-bg:   254 226 226; /* red-100   */
+    --color-badge-danger-text: 185  28  28; /* red-700   */
+    --color-badge-warning-bg:  254 243 199; /* amber-100 */
+    --color-badge-warning-text: 180  83   9; /* amber-700 */
+    --color-badge-primary-bg:  224 231 255; /* indigo-100 */
+    --color-badge-primary-text:  67  56 202; /* indigo-700 */
+    --color-badge-info-bg:     224 242 254; /* sky-100   */
+    --color-badge-info-text:     3 105 161; /* sky-700   */
+}
+
+.dark {
+    /* Backgrounds */
+    --color-bg:          3   7  18; /* gray-950 */
+    --color-surface:    17  24  39; /* gray-900 */
+    --color-surface-2:  31  41  55; /* gray-800 */
+    --color-surface-3:  55  65  81; /* gray-700 */
+
+    /* Borders */
+    --color-border:        55  65  81; /* gray-700 */
+    --color-border-strong: 75  85  99; /* gray-600 */
+    --color-border-subtle: 31  41  55; /* gray-800 */
+
+    /* Text */
+    --color-text-primary:   243 244 246; /* gray-100 */
+    --color-text-secondary: 156 163 175; /* gray-400 */
+    --color-text-muted:     107 114 128; /* gray-500 */
+    --color-text-subtle:     75  85  99; /* gray-600 */
+
+    /* Badge backgrounds & text */
+    --color-badge-danger-bg:   127  29  29; /* red-900   */
+    --color-badge-danger-text: 252 165 165; /* red-300   */
+    --color-badge-warning-bg:  120  53  15; /* amber-900 */
+    --color-badge-warning-text: 252 211  77; /* amber-300 */
+    --color-badge-primary-bg:   49  46 129; /* indigo-900 */
+    --color-badge-primary-text: 165 180 252; /* indigo-300 */
+    --color-badge-info-bg:      12  74 110; /* sky-900   */
+    --color-badge-info-text:   125 211 252; /* sky-300   */
+}
+
+/* ── Theme switching — synchronised transition on all elements ───────────── */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+    transition:
+        background-color 250ms ease,
+        border-color 250ms ease,
+        color 250ms ease,
+        fill 250ms ease,
+        stroke 250ms ease !important;
+}
+
+/* ── Native date input icon (calendar) ───────────────────────────────────── */
+.dark input[type="date"] {
+    color-scheme: dark;
+}
+
+/* ── Browser autofill override ───────────────────────────────────────────── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px rgb(var(--color-surface-2)) inset !important;
+    -webkit-text-fill-color: rgb(var(--color-text-primary)) !important;
+    caret-color: rgb(var(--color-text-primary));
+    transition: background-color 5000s ease-in-out 0s;
+}
