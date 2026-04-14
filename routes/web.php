@@ -7,6 +7,7 @@ use App\Http\Controllers\DevDashboardController;
 use App\Http\Controllers\DevPasswordController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\NoteImageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/notes/{note}/backlinks', [NoteController::class, 'backlinks'])->name('notes.backlinks');
     Route::get('/notes/{note}/unlinked-mentions', [NoteController::class, 'unlinkedMentions'])->name('notes.unlinkedMentions');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
+    Route::post('/notes/images', [NoteImageController::class, 'upload'])->name('notes.images.upload');
+    Route::get('/notes/images/{filename}', [NoteImageController::class, 'serve'])->name('notes.images.serve');
 });
 
 Route::middleware(['auth', 'role:ROLE_DEV'])->group(function () {

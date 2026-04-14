@@ -27,6 +27,7 @@ import {
     Code,
     BookOpen,
     Eye,
+    ImageIcon,
 } from 'lucide-vue-next';
 
 // ── Marked setup (read-only — no wiki-link autocomplete, no embeds) ──────────
@@ -71,6 +72,8 @@ Lorem ipsum dolor sit amet, **consectetur adipiscing** elit. Sed do eiusmod temp
 *Lorem ipsum* dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation ullamco. Les backlinks sont automatiquement calculés — cette note apparaît dans les backlinks de [[Projet Atlas]].
 
 On peut aussi donner un alias : \`[[Projet Atlas|voir le projet]]\`.
+
+![Aperçu de l'interface|600](/demo/demo-preview.jpg)
 
 ---
 
@@ -296,21 +299,24 @@ const activeNoteId = ref(1);
 const activeNote = computed(() => DEMO_NOTES.find((n) => n.id === activeNoteId.value) ?? DEMO_NOTES[0]);
 
 function renderDemoNote(content) {
-    // Replace [[note title]] and [[note title|alias]] with demo-navigable links before parsing
-    const linked = content.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, title, alias) => {
-        const display = (alias ?? title).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    resetCheckboxCounter();
+
+    // Parse markdown first — marked v18 escapes raw HTML so wiki-links must be
+    // replaced AFTER parsing, directly in the resulting HTML string.
+    const parsed = marked.parse(content);
+
+    const linked = parsed.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, title, alias) => {
+        const display      = (alias ?? title).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const escapedTitle = title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        const exists = DEMO_NOTES.some((n) => n.title.toLowerCase() === title.trim().toLowerCase());
+        const exists       = DEMO_NOTES.some((n) => n.title.toLowerCase() === title.trim().toLowerCase());
         return exists
             ? `<a class="wiki-link demo-wiki-link" data-demo-note="${escapedTitle}">${display}</a>`
             : `<span class="wiki-link wiki-link-missing">${display}</span>`;
     });
-    resetCheckboxCounter();
-    return DOMPurify.sanitize(marked.parse(linked), {
+
+    return DOMPurify.sanitize(linked, {
         ...PURIFY_CONFIG,
         ADD_ATTR: [...(PURIFY_CONFIG.ADD_ATTR ?? []), 'data-demo-note'],
-        FORBID_TAGS: [],
-        FORCE_BODY: false,
     });
 }
 
@@ -566,6 +572,54 @@ const shortcuts = [
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </section>
+
+                <!-- Images -->
+                <section>
+                    <h2 class="section-title">
+                        <ImageIcon class="w-4 h-4 text-indigo-400 shrink-0" />
+                        {{ t('guide.sections.images') }}
+                    </h2>
+                    <div class="card overflow-x-auto mb-4">
+                        <table class="w-full text-sm min-w-[340px]">
+                            <thead>
+                                <tr class="border-b border-base bg-surface-2">
+                                    <th class="th">{{ t('guide.col.syntax') }}</th>
+                                    <th class="th">{{ t('guide.col.description') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-base">
+                                <tr>
+                                    <td class="td"><code class="ci">![alt](url)</code></td>
+                                    <td class="td text-secondary">{{ t('guide.imageDesc.basic') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td"><code class="ci">![alt|300](url)</code></td>
+                                    <td class="td text-secondary">{{ t('guide.imageDesc.width') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="td"><code class="ci">![alt|300x200](url)</code></td>
+                                    <td class="td text-secondary">{{ t('guide.imageDesc.dimensions') }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="card p-4 flex items-start gap-3">
+                            <span class="w-8 h-8 flex items-center justify-center rounded-md bg-indigo-500/10 text-indigo-400 text-base shrink-0">⬆</span>
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-primary">{{ t('guide.imageFeatures.dragdrop.title') }}</p>
+                                <p class="text-xs text-secondary mt-0.5">{{ t('guide.imageFeatures.dragdrop.desc') }}</p>
+                            </div>
+                        </div>
+                        <div class="card p-4 flex items-start gap-3">
+                            <span class="w-8 h-8 flex items-center justify-center rounded-md bg-indigo-500/10 text-indigo-400 text-base shrink-0">⇧</span>
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold text-primary">{{ t('guide.imageFeatures.paste.title') }}</p>
+                                <p class="text-xs text-secondary mt-0.5">{{ t('guide.imageFeatures.paste.desc') }}</p>
+                            </div>
+                        </div>
                     </div>
                 </section>
 

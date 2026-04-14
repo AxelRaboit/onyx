@@ -167,6 +167,7 @@ export default {
             formatting: 'Textformatierung',
             headings: 'Überschriften',
             lists: 'Listen',
+            images: 'Bilder',
             links: 'Links & Einbettungen',
             blocks: 'Zitat & Trennlinie',
             code: 'Codeblöcke',
@@ -180,6 +181,21 @@ export default {
             bullet: 'Aufzählungsliste',
             numbered: 'Nummerierte Liste',
             checkbox: 'Kontrollkästchen',
+        },
+        imageDesc: {
+            basic: 'Ein Bild anzeigen',
+            width: 'Auf eine bestimmte Breite in Pixeln skalieren',
+            dimensions: 'Auf Breite × Höhe in Pixeln skalieren',
+        },
+        imageFeatures: {
+            dragdrop: {
+                title: 'Drag & Drop',
+                desc: 'Bild vom Computer direkt in den Editor ziehen.',
+            },
+            paste: {
+                title: 'Aus Zwischenablage einfügen',
+                desc: 'Kopiertes Bild oder Screenshot mit Ctrl+V einfügen.',
+            },
         },
         linkDesc: {
             wikiLink: 'Link zu einer anderen Notiz',
