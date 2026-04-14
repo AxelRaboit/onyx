@@ -167,6 +167,7 @@ export default {
             formatting: 'Mise en forme du texte',
             headings: 'Titres',
             lists: 'Listes',
+            images: 'Images',
             links: 'Liens et intégrations',
             blocks: 'Citation et séparateur',
             code: 'Blocs de code',
@@ -180,6 +181,21 @@ export default {
             bullet: 'Liste à puces',
             numbered: 'Liste numérotée',
             checkbox: 'Cases à cocher',
+        },
+        imageDesc: {
+            basic: 'Afficher une image',
+            width: 'Redimensionner à une largeur en pixels',
+            dimensions: 'Redimensionner à une largeur × hauteur en pixels',
+        },
+        imageFeatures: {
+            dragdrop: {
+                title: 'Glisser-déposer',
+                desc: "Faites glisser une image depuis votre ordinateur directement dans l'éditeur.",
+            },
+            paste: {
+                title: 'Coller depuis le presse-papier',
+                desc: "Collez une image copiée ou une capture d'écran avec Ctrl+V.",
+            },
         },
         linkDesc: {
             wikiLink: 'Lien vers une autre note',

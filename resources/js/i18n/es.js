@@ -167,6 +167,7 @@ export default {
             formatting: 'Formato de texto',
             headings: 'Títulos',
             lists: 'Listas',
+            images: 'Imágenes',
             links: 'Enlaces e integraciones',
             blocks: 'Cita y separador',
             code: 'Bloques de código',
@@ -180,6 +181,21 @@ export default {
             bullet: 'Lista con viñetas',
             numbered: 'Lista numerada',
             checkbox: 'Casillas de verificación',
+        },
+        imageDesc: {
+            basic: 'Mostrar una imagen',
+            width: 'Redimensionar a un ancho en píxeles',
+            dimensions: 'Redimensionar a ancho × alto en píxeles',
+        },
+        imageFeatures: {
+            dragdrop: {
+                title: 'Arrastrar y soltar',
+                desc: 'Arrastra una imagen desde tu ordenador directamente al editor.',
+            },
+            paste: {
+                title: 'Pegar desde el portapapeles',
+                desc: 'Pega una imagen copiada o captura de pantalla con Ctrl+V.',
+            },
         },
         linkDesc: {
             wikiLink: 'Enlace a otra nota',

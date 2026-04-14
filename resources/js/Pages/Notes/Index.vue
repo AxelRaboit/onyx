@@ -21,6 +21,8 @@ import { useNoteOutline } from '@/composables/notes/useNoteOutline';
 import { handleNoteShortcut } from '@/composables/notes/useNoteShortcuts';
 import { useSlashCommands } from '@/composables/notes/useSlashCommands';
 import { useNoteTemplates } from '@/composables/notes/useNoteTemplates';
+import { useNoteImageUpload } from '@/composables/notes/useNoteImageUpload';
+import { useNoteImageResize } from '@/composables/notes/useNoteImageResize';
 import { BookTemplate, Save, CalendarDays } from 'lucide-vue-next';
 import NoteGraph from '@/components/notes/NoteGraph.vue';
 import { Link2, Unlink, List, GitBranch } from 'lucide-vue-next';
@@ -37,6 +39,24 @@ marked.use({
             const text = this.parser.parseInline(tokens);
             const slug = text.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^\w]+/g, '-').replace(/(^-|-$)/g, '');
             return `<h${depth} id="${slug}">${text}</h${depth}>\n`;
+        },
+        image({ href, title, text }) {
+            // Obsidian-style resize: ![alt|300](url) or ![alt|300x200](url)
+            let alt = text ?? '';
+            let width = '';
+            let height = '';
+
+            const dimMatch = alt.match(/^(.*?)\|(\d+)(?:x(\d+))?$/);
+            if (dimMatch) {
+                alt    = dimMatch[1];
+                width  = ` width="${dimMatch[2]}"`;
+                height = dimMatch[3] ? ` height="${dimMatch[3]}"` : '';
+            }
+
+            const altAttr   = alt   ? ` alt="${alt}"`     : '';
+            const titleAttr = title ? ` title="${title}"` : '';
+
+            return `<img src="${href}"${altAttr}${titleAttr}${width}${height} class="max-w-full rounded-lg my-2" loading="lazy" />`;
         },
         ...createCheckboxRenderer(),
         ...createHighlightRenderer(),
@@ -280,6 +300,14 @@ watch(selectedNoteId, (id) => {
 // ── Editor state ──────────────────────────────────────────────────────────────
 const editTitle   = ref('');
 const editContent = ref('');
+const {
+    isUploading,
+    isDragOver: isImageDragOver,
+    onDragOver: onImageDragOver,
+    onDragLeave: onImageDragLeave,
+    onDrop: onImageDrop,
+    onPaste: onImagePaste,
+} = useNoteImageUpload(editContent, contentTextarea);
 const editTags    = ref([]);
 const tagInput    = ref('');
 const isPreview   = ref(false);
@@ -370,13 +398,15 @@ onBeforeUnmount(() => clearTimeout(saveTimer));
 
 const PURIFY_CONFIG = {
     ADD_TAGS: ['svg', 'path', 'circle', 'line', 'polyline', 'polygon', 'rect'],
-    ADD_ATTR: ['data-note-title', 'data-heading', 'data-embed-title', 'data-checkbox-index', 'viewBox', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'd', 'cx', 'cy', 'r', 'x', 'y', 'x1', 'x2', 'y1', 'y2', 'rx', 'ry', 'width', 'height', 'points', 'xmlns'],
+    ADD_ATTR: ['data-note-title', 'data-heading', 'data-embed-title', 'data-checkbox-index', 'viewBox', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'd', 'cx', 'cy', 'r', 'x', 'y', 'x1', 'x2', 'y1', 'y2', 'rx', 'ry', 'width', 'height', 'points', 'xmlns', 'src', 'alt', 'class', 'loading'],
 };
 
 const renderedContent = computed(() => {
     resetCheckboxCounter();
     return DOMPurify.sanitize(marked.parse(editContent.value || ''), PURIFY_CONFIG);
 });
+
+useNoteImageResize(previewContainer, renderedContent, editContent);
 
 // ── Tags ──────────────────────────────────────────────────────────────────────
 function addTag() {
@@ -590,7 +620,7 @@ async function confirmDelete() {
                     </div>
 
                     <!-- Content area -->
-                    <div class="flex-1 overflow-auto px-8 py-6 space-y-4 scrollbar-thin">
+                    <div class="flex-1 overflow-auto px-8 py-6 flex flex-col gap-4 scrollbar-thin">
                         <!-- Title -->
                         <input
                             v-model="editTitle"
@@ -624,15 +654,32 @@ async function confirmDelete() {
                         <div class="border-t border-base/40" />
 
                         <!-- Editor / Preview -->
-                        <div v-if="!isPreview" class="relative">
+                        <div
+                            v-if="!isPreview"
+                            class="relative flex-1 flex flex-col"
+                            v-on:dragover="onImageDragOver"
+                            v-on:dragleave="onImageDragLeave"
+                            v-on:drop="onImageDrop"
+                        >
+                            <div
+                                v-if="isImageDragOver"
+                                class="absolute inset-0 z-10 flex items-center justify-center rounded-lg border-2 border-dashed border-badge-primary-text bg-badge-primary-bg/40 pointer-events-none"
+                            >
+                                <span class="text-sm font-medium text-badge-primary-text">Déposer l'image ici</span>
+                            </div>
+                            <div v-if="isUploading" class="absolute top-2 right-2 z-10 flex items-center gap-1.5 px-2 py-1 rounded-md bg-surface-2 border border-base text-xs text-muted">
+                                <Loader2 class="w-3 h-3 animate-spin" />
+                                Upload…
+                            </div>
                             <textarea
                                 ref="contentTextarea"
                                 v-model="editContent"
                                 :placeholder="t('notepad.contentPlaceholder')"
-                                class="w-full min-h-[50vh] bg-transparent text-sm text-primary placeholder:text-muted/40 border-none outline-none focus:outline-none resize-none leading-7"
+                                class="w-full flex-1 min-h-0 bg-transparent text-sm text-primary placeholder:text-muted/40 border-none outline-none focus:outline-none resize-none leading-7"
                                 v-on:input="handleContentInput"
                                 v-on:keydown="handleContentKeydown"
                                 v-on:blur="closeSuggestions(); closeSlash()"
+                                v-on:paste="onImagePaste"
                             />
 
                             <!-- Wiki-link autocomplete dropdown -->
@@ -673,7 +720,7 @@ async function confirmDelete() {
                         <div
                             v-else
                             ref="previewContainer"
-                            class="prose prose-sm dark:prose-invert max-w-none min-h-[50vh] text-primary wiki-link-preview"
+                            class="prose prose-sm dark:prose-invert max-w-none text-primary wiki-link-preview"
                             v-on:click="onPreviewClick"
                             v-html="renderedContent"
                         />

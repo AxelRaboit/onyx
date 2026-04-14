@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class NoteService
 {
+    private const string IMAGE_URL_PATTERN = '/\/notes\/images\/([^\s\)\"\']+)/';
+
+    public function __construct(
+        private readonly NoteImageService $imageService,
+    ) {}
+
     /**
      * Return a flat list of all user notes (frontend builds the tree).
      * Content is excluded — loaded on demand via show().
@@ -40,8 +46,12 @@ class NoteService
 
     public function update(Note $note, array $data): Note
     {
+        $oldContent = $note->content ?? '';
         $oldTitle = $note->title;
         $note->update($data);
+
+        $newContent = $data['content'] ?? '';
+        $this->deleteOrphanedImages($oldContent, $newContent);
 
         $newTitle = $data['title'] ?? null;
         $user = $note->user;
@@ -196,6 +206,22 @@ class NoteService
 
     public function delete(Note $note): void
     {
+        $this->deleteOrphanedImages($note->content ?? '', '');
         $note->delete();
+    }
+
+    /**
+     * Delete note image files that appear in $oldContent but no longer in $newContent.
+     */
+    private function deleteOrphanedImages(string $oldContent, string $newContent): void
+    {
+        preg_match_all(self::IMAGE_URL_PATTERN, $oldContent, $oldMatches);
+        preg_match_all(self::IMAGE_URL_PATTERN, $newContent, $newMatches);
+
+        $removed = array_diff($oldMatches[1], $newMatches[1]);
+
+        foreach ($removed as $filename) {
+            @unlink($this->imageService->path($filename));
+        }
     }
 }

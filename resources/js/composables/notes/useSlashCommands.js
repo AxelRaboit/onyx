@@ -11,6 +11,7 @@ const COMMANDS = [
     { id: 'divider', label: 'Divider', icon: '—', insert: '\n---\n', type: 'block' },
     { id: 'code', label: 'Code block', icon: '</>', insert: '```\n\n```', type: 'block', cursorOffset: 4 },
     { id: 'callout', label: 'Callout', icon: '!', insert: '> [!info] \n> ', type: 'block', cursorOffset: 10 },
+    { id: 'image', label: 'Image', icon: '⌖', insert: '![|]()', type: 'inline', cursorOffset: 2 },
     { id: 'link', label: 'Wiki link', icon: '[[', insert: '[[]]', type: 'inline', cursorOffset: 2 },
     { id: 'bold', label: 'Bold', icon: 'B', insert: '****', type: 'inline', cursorOffset: 2 },
     { id: 'italic', label: 'Italic', icon: 'I', insert: '**', type: 'inline', cursorOffset: 1 },

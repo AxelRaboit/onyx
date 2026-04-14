@@ -167,6 +167,7 @@ export default {
             formatting: 'Text formatting',
             headings: 'Headings',
             lists: 'Lists',
+            images: 'Images',
             links: 'Links & embeds',
             blocks: 'Blockquote & divider',
             code: 'Code blocks',
@@ -180,6 +181,21 @@ export default {
             bullet: 'Bullet list',
             numbered: 'Numbered list',
             checkbox: 'Checkboxes',
+        },
+        imageDesc: {
+            basic: 'Display an image',
+            width: 'Resize to a specific width in pixels',
+            dimensions: 'Resize to width × height in pixels',
+        },
+        imageFeatures: {
+            dragdrop: {
+                title: 'Drag & drop',
+                desc: 'Drag an image from your computer directly into the editor.',
+            },
+            paste: {
+                title: 'Paste from clipboard',
+                desc: 'Paste a copied image or screenshot with Ctrl+V.',
+            },
         },
         linkDesc: {
             wikiLink: 'Link to another note',

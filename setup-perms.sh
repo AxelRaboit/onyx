@@ -14,13 +14,14 @@ WEB_GROUP="www-data"
 # Create necessary directories
 create_directories() {
 	echo "Creating directories..."
-	mkdir -p storage/app/public
 	mkdir -p storage/framework/cache/data
 	mkdir -p storage/framework/sessions
 	mkdir -p storage/framework/views
 	mkdir -p storage/logs
 	mkdir -p bootstrap/cache
 	mkdir -p public/build
+	mkdir -p public/demo
+	mkdir -p storage/app/private/note-images
 	echo "Directories created!"
 }
 
@@ -71,6 +72,10 @@ set_writable_directories_permissions() {
 	# public/build/ owned by deploy user but readable by web server
 	chown -R ${APP_USER}:${WEB_GROUP} public/build 2>/dev/null || true
 	chmod -R 2775 public/build 2>/dev/null || true
+
+	# storage/app/note-images/ writable by web server (uploaded images, served via auth route)
+	chown -R ${APP_USER}:${WEB_GROUP} storage/app/private/note-images 2>/dev/null || true
+	chmod -R 2775 storage/app/private/note-images 2>/dev/null || true
 
 	echo "Writable directories permissions set!"
 }

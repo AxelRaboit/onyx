@@ -6,6 +6,7 @@ namespace Tests\Unit\Services;
 
 use App\Models\Note;
 use App\Models\User;
+use App\Services\NoteImageService;
 use App\Services\NoteService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -19,7 +20,7 @@ class NoteServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new NoteService;
+        $this->service = new NoteService(new NoteImageService);
     }
 
     // ── create() ──────────────────────────────────────────────────────────────
