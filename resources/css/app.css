@@ -1,38 +1,138 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/typography";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Dark mode: triggered by .dark class on any parent element */
+@custom-variant dark (&:where(.dark, .dark *));
 
-@layer utilities {
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+@layer base {
+    button, [role="button"], [type="button"], [type="submit"], [type="reset"] {
+        cursor: pointer;
     }
-    .scrollbar-hide::-webkit-scrollbar {
+}
+
+/* ── Tailwind theme tokens ─────────────────────────────────────────────────── */
+/* Values reference --th-* variables so Tailwind keeps var() in utility classes
+   instead of inlining literal colors. This allows .dark {} to swap values at
+   runtime without recompiling.                                                 */
+@theme inline {
+    --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+
+    --text-2xs: 0.625rem;
+    --text-2xs--line-height: 0.875rem;
+
+    --spacing-120: 30rem;
+
+    --color-bg:        var(--th-bg);
+    --color-surface:   var(--th-surface);
+    --color-surface-2: var(--th-surface-2);
+    --color-surface-3: var(--th-surface-3);
+
+    --color-primary:   var(--th-primary);
+    --color-secondary: var(--th-secondary);
+    --color-muted:     var(--th-muted);
+    --color-subtle:    var(--th-subtle);
+
+    --color-line:        var(--color-border);
+    --color-line-strong: var(--color-border-strong);
+
+    --color-badge-danger-bg:    var(--th-badge-danger-bg);
+    --color-badge-danger-text:  var(--th-badge-danger-text);
+    --color-badge-warning-bg:   var(--th-badge-warning-bg);
+    --color-badge-warning-text: var(--th-badge-warning-text);
+    --color-badge-primary-bg:   var(--th-badge-primary-bg);
+    --color-badge-primary-text: var(--th-badge-primary-text);
+    --color-badge-info-bg:      var(--th-badge-info-bg);
+    --color-badge-info-text:    var(--th-badge-info-text);
+}
+
+/* ── Semantic color variables ─────────────────────────────────────────────── */
+:root {
+    /* Backgrounds */
+    --th-bg:        rgb(249 250 251); /* gray-50  */
+    --th-surface:   rgb(255 255 255); /* white    */
+    --th-surface-2: rgb(243 244 246); /* gray-100 */
+    --th-surface-3: rgb(229 231 235); /* gray-200 */
+
+    /* Borders */
+    --color-border:        rgb(229 231 235); /* gray-200 */
+    --color-border-strong: rgb(209 213 219); /* gray-300 */
+
+    /* Text */
+    --th-primary:   rgb(17  24  39); /* gray-900 */
+    --th-secondary: rgb(107 114 128); /* gray-500 */
+    --th-muted:     rgb(156 163 175); /* gray-400 */
+    --th-subtle:    rgb(209 213 219); /* gray-300 */
+
+    /* Badges */
+    --th-badge-danger-bg:    rgb(254 226 226); /* red-100    */
+    --th-badge-danger-text:  rgb(185  28  28); /* red-700    */
+    --th-badge-warning-bg:   rgb(254 243 199); /* amber-100  */
+    --th-badge-warning-text: rgb(180  83   9); /* amber-700  */
+    --th-badge-primary-bg:   rgb(224 231 255); /* indigo-100 */
+    --th-badge-primary-text: rgb( 67  56 202); /* indigo-700 */
+    --th-badge-info-bg:      rgb(224 242 254); /* sky-100    */
+    --th-badge-info-text:    rgb(  3 105 161); /* sky-700    */
+}
+
+.dark {
+    /* Backgrounds */
+    --th-bg:        rgb(  3   7  18); /* gray-950 */
+    --th-surface:   rgb( 17  24  39); /* gray-900 */
+    --th-surface-2: rgb( 31  41  55); /* gray-800 */
+    --th-surface-3: rgb( 55  65  81); /* gray-700 */
+
+    /* Borders */
+    --color-border:        rgb(55  65  81); /* gray-700 */
+    --color-border-strong: rgb(75  85  99); /* gray-600 */
+
+    /* Text */
+    --th-primary:   rgb(243 244 246); /* gray-100 */
+    --th-secondary: rgb(156 163 175); /* gray-400 */
+    --th-muted:     rgb(107 114 128); /* gray-500 */
+    --th-subtle:    rgb( 75  85  99); /* gray-600 */
+
+    /* Badges */
+    --th-badge-danger-bg:    rgb(127  29  29); /* red-900    */
+    --th-badge-danger-text:  rgb(252 165 165); /* red-300    */
+    --th-badge-warning-bg:   rgb(120  53  15); /* amber-900  */
+    --th-badge-warning-text: rgb(252 211  77); /* amber-300  */
+    --th-badge-primary-bg:   rgb( 49  46 129); /* indigo-900 */
+    --th-badge-primary-text: rgb(165 180 252); /* indigo-300 */
+    --th-badge-info-bg:      rgb( 12  74 110); /* sky-900    */
+    --th-badge-info-text:    rgb(125 211 252); /* sky-300    */
+}
+
+
+/* ── Scrollbar utilities ──────────────────────────────────────────────────── */
+@utility scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
         display: none;
     }
+}
 
-    .scrollbar-thin {
-        scrollbar-width: thin;
-        scrollbar-color: rgb(99 102 241 / 0.2) transparent;
-    }
-    .scrollbar-thin::-webkit-scrollbar {
+@utility scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(99 102 241 / 0.2) transparent;
+    &::-webkit-scrollbar {
         width: 5px;
         height: 5px;
     }
-    .scrollbar-thin::-webkit-scrollbar-track {
+    &::-webkit-scrollbar-track {
         background: transparent;
     }
-    .scrollbar-thin::-webkit-scrollbar-thumb {
+    &::-webkit-scrollbar-thumb {
         background-color: rgb(99 102 241 / 0.2);
         border-radius: 9999px;
     }
-    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    &::-webkit-scrollbar-thumb:hover {
         background-color: rgb(99 102 241 / 0.45);
     }
 }
 
-/* ── Dashboard card bubble animations ───────────────────────────────────────── */
+/* ── Dashboard card bubble animations ────────────────────────────────────── */
 @keyframes bubble-float {
     0%, 100% { transform: translate(0, 0) scale(1); }
     50%       { transform: translate(-6px, -8px) scale(1.05); }
@@ -43,67 +143,6 @@
 }
 .bubble-1 { animation: bubble-float     7s ease-in-out infinite; }
 .bubble-2 { animation: bubble-float-alt 9s ease-in-out infinite; }
-
-/* ── Semantic color tokens ───────────────────────────────────────────────────
-   RGB format (no commas) so Tailwind opacity modifiers work: bg-surface/50
-   ─────────────────────────────────────────────────────────────────────────── */
-:root {
-    /* Backgrounds */
-    --color-bg:        249 250 251; /* gray-50  */
-    --color-surface:   255 255 255; /* white    */
-    --color-surface-2: 243 244 246; /* gray-100 */
-    --color-surface-3: 229 231 235; /* gray-200 */
-
-    /* Borders */
-    --color-border:        229 231 235; /* gray-200 */
-    --color-border-strong: 209 213 219; /* gray-300 */
-    --color-border-subtle: 243 244 246; /* gray-100 */
-
-    /* Text */
-    --color-text-primary:    17  24  39; /* gray-900 */
-    --color-text-secondary: 107 114 128; /* gray-500 */
-    --color-text-muted:     156 163 175; /* gray-400 */
-    --color-text-subtle:    209 213 219; /* gray-300 */
-
-    /* Badge backgrounds & text (icon circles + inline text badges) */
-    --color-badge-danger-bg:   254 226 226; /* red-100   */
-    --color-badge-danger-text: 185  28  28; /* red-700   */
-    --color-badge-warning-bg:  254 243 199; /* amber-100 */
-    --color-badge-warning-text: 180  83   9; /* amber-700 */
-    --color-badge-primary-bg:  224 231 255; /* indigo-100 */
-    --color-badge-primary-text:  67  56 202; /* indigo-700 */
-    --color-badge-info-bg:     224 242 254; /* sky-100   */
-    --color-badge-info-text:     3 105 161; /* sky-700   */
-}
-
-.dark {
-    /* Backgrounds */
-    --color-bg:          3   7  18; /* gray-950 */
-    --color-surface:    17  24  39; /* gray-900 */
-    --color-surface-2:  31  41  55; /* gray-800 */
-    --color-surface-3:  55  65  81; /* gray-700 */
-
-    /* Borders */
-    --color-border:        55  65  81; /* gray-700 */
-    --color-border-strong: 75  85  99; /* gray-600 */
-    --color-border-subtle: 31  41  55; /* gray-800 */
-
-    /* Text */
-    --color-text-primary:   243 244 246; /* gray-100 */
-    --color-text-secondary: 156 163 175; /* gray-400 */
-    --color-text-muted:     107 114 128; /* gray-500 */
-    --color-text-subtle:     75  85  99; /* gray-600 */
-
-    /* Badge backgrounds & text */
-    --color-badge-danger-bg:   127  29  29; /* red-900   */
-    --color-badge-danger-text: 252 165 165; /* red-300   */
-    --color-badge-warning-bg:  120  53  15; /* amber-900 */
-    --color-badge-warning-text: 252 211  77; /* amber-300 */
-    --color-badge-primary-bg:   49  46 129; /* indigo-900 */
-    --color-badge-primary-text: 165 180 252; /* indigo-300 */
-    --color-badge-info-bg:      12  74 110; /* sky-900   */
-    --color-badge-info-text:   125 211 252; /* sky-300   */
-}
 
 /* ── Theme switching — synchronised transition on all elements ───────────── */
 html.theme-switching *,
@@ -126,8 +165,8 @@ html.theme-switching *::after {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0px 1000px rgb(var(--color-surface-2)) inset !important;
-    -webkit-text-fill-color: rgb(var(--color-text-primary)) !important;
-    caret-color: rgb(var(--color-text-primary));
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-surface-2) inset !important;
+    -webkit-text-fill-color: var(--color-primary) !important;
+    caret-color: var(--color-primary);
     transition: background-color 5000s ease-in-out 0s;
 }

@@ -1,4 +1,13 @@
 /* ── Wiki-links (Obsidian-style [[note]] links) ─────────────────────────── */
+.wiki-link-missing {
+    color: #94a3b8;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 2px;
+    cursor: default;
+}
+
+
 .wiki-link-preview .wiki-link {
     color: #818cf8;
     text-decoration: underline;

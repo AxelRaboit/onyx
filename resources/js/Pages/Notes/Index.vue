@@ -450,7 +450,7 @@ async function confirmDelete() {
         </template>
 
         <!-- Two-panel layout: editor left + tree sidebar right -->
-        <div class="flex h-[calc(100vh-10rem)] rounded-xl overflow-hidden border border-base/60 bg-surface">
+        <div class="flex h-[calc(100vh-10rem)] rounded-xl overflow-hidden border border-line/60 bg-surface">
             <!-- ── Editor (left) ───────────────────────────────────────────── -->
             <div
                 class="flex-1 flex-col min-w-0"
@@ -461,7 +461,7 @@ async function confirmDelete() {
                     v-if="showGraph"
                     class="flex-1 flex flex-col overflow-hidden"
                 >
-                    <div class="flex items-center justify-between px-4 py-2.5 border-b border-base/60 shrink-0">
+                    <div class="flex items-center justify-between px-4 py-2.5 border-b border-line/60 shrink-0">
                         <span class="text-sm font-medium text-primary">{{ t('notepad.graph') }}</span>
                         <button
                             class="text-xs px-2.5 py-1 rounded-md text-muted hover:text-primary hover:bg-surface-2 transition-colors"
@@ -498,7 +498,7 @@ async function confirmDelete() {
                 <!-- Note editor -->
                 <template v-else-if="loadedNote">
                     <!-- Editor toolbar -->
-                    <div class="flex items-center justify-between gap-3 border-b border-base/60 px-4 py-2.5 shrink-0">
+                    <div class="flex items-center justify-between gap-3 border-b border-line/60 px-4 py-2.5 shrink-0">
                         <div class="flex items-center gap-2">
                             <!-- Back to list (mobile only) -->
                             <button
@@ -520,7 +520,7 @@ async function confirmDelete() {
 
                         <div class="flex items-center gap-2">
                             <!-- Edit / Preview toggle -->
-                            <div class="flex items-center rounded-lg border border-base overflow-hidden text-xs">
+                            <div class="flex items-center rounded-lg border border-line overflow-hidden text-xs">
                                 <button
                                     class="flex items-center gap-1.5 px-2.5 py-1.5 transition-colors"
                                     :class="!isPreview ? 'bg-indigo-600/20 text-indigo-400' : 'text-muted hover:text-primary'"
@@ -561,9 +561,9 @@ async function confirmDelete() {
                                 </button>
                                 <div
                                     v-if="showTemplates"
-                                    class="absolute right-0 top-8 z-50 w-56 max-h-64 overflow-auto rounded-lg border border-base/60 bg-surface shadow-lg scrollbar-thin"
+                                    class="absolute right-0 top-8 z-50 w-56 max-h-64 overflow-auto rounded-lg border border-line/60 bg-surface shadow-lg scrollbar-thin"
                                 >
-                                    <div class="px-3 py-2 border-b border-base/60">
+                                    <div class="px-3 py-2 border-b border-line/60">
                                         <button
                                             class="flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
                                             v-on:click="saveAsTemplate()"
@@ -605,7 +605,7 @@ async function confirmDelete() {
                     <!-- Outline panel -->
                     <div
                         v-if="showOutline && headings.length > 0"
-                        class="border-b border-base/60 px-4 py-2 max-h-48 overflow-auto shrink-0 scrollbar-thin"
+                        class="border-b border-line/60 px-4 py-2 max-h-48 overflow-auto shrink-0 scrollbar-thin"
                     >
                         <p class="text-xs font-medium text-muted uppercase tracking-wide mb-1.5">{{ t('notepad.outline') }}</p>
                         <button
@@ -651,7 +651,7 @@ async function confirmDelete() {
                             >
                         </div>
 
-                        <div class="border-t border-base/40" />
+                        <div class="border-t border-line/40" />
 
                         <div
                             v-if="!isPreview"
@@ -667,7 +667,7 @@ async function confirmDelete() {
                             >
                                 <span class="text-sm font-medium text-badge-primary-text">Déposer l'image ici</span>
                             </div>
-                            <div v-if="isUploading" class="absolute top-2 right-2 z-10 flex items-center gap-1.5 px-2 py-1 rounded-md bg-surface-2 border border-base text-xs text-muted">
+                            <div v-if="isUploading" class="absolute top-2 right-2 z-10 flex items-center gap-1.5 px-2 py-1 rounded-md bg-surface-2 border border-line text-xs text-muted">
                                 <Loader2 class="w-3 h-3 animate-spin" />
                                 Upload…
                             </div>
@@ -685,7 +685,7 @@ async function confirmDelete() {
                             <!-- Wiki-link autocomplete dropdown -->
                             <div
                                 v-if="showSuggestions && filteredSuggestions.length > 0"
-                                class="absolute z-50 w-64 max-h-52 overflow-auto rounded-lg border border-base/60 bg-surface shadow-lg scrollbar-thin"
+                                class="absolute z-50 w-64 max-h-52 overflow-auto rounded-lg border border-line/60 bg-surface shadow-lg scrollbar-thin"
                                 :style="{ top: suggestionPosition.top + 'px', left: suggestionPosition.left + 'px' }"
                             >
                                 <button
@@ -702,7 +702,7 @@ async function confirmDelete() {
                             <!-- Slash commands dropdown -->
                             <div
                                 v-if="showSlash && filteredCommands.length > 0"
-                                class="absolute z-50 w-56 max-h-64 overflow-auto rounded-lg border border-base/60 bg-surface shadow-lg scrollbar-thin"
+                                class="absolute z-50 w-56 max-h-64 overflow-auto rounded-lg border border-line/60 bg-surface shadow-lg scrollbar-thin"
                                 :style="{ top: slashPosition.top + 'px', left: slashPosition.left + 'px' }"
                             >
                                 <button
@@ -725,7 +725,7 @@ async function confirmDelete() {
                             v-html="renderedContent"
                         />
                         <!-- Backlinks & Unlinked mentions -->
-                        <div v-if="loadedNote?.title" class="border-t border-base/40 mt-4 pt-4 space-y-3">
+                        <div v-if="loadedNote?.title" class="border-t border-line/40 mt-4 pt-4 space-y-3">
                             <!-- Backlinks -->
                             <div>
                                 <button
@@ -788,11 +788,11 @@ async function confirmDelete() {
 
             <!-- ── Sidebar (right) ─────────────────────────────────────────── -->
             <div
-                class="flex-col shrink-0 bg-surface md:border-l border-base/60 w-full md:w-60"
+                class="flex-col shrink-0 bg-surface md:border-l border-line/60 w-full md:w-60"
                 :class="mobilePanel === 'list' ? 'flex' : 'hidden md:flex'"
             >
                 <!-- Sidebar header -->
-                <div class="flex items-center justify-between px-3 py-2.5 border-b border-base/60 shrink-0">
+                <div class="flex items-center justify-between px-3 py-2.5 border-b border-line/60 shrink-0">
                     <span class="text-xs font-medium text-muted uppercase tracking-wide">
                         {{ t('notepad.title') }}
                     </span>
@@ -823,14 +823,14 @@ async function confirmDelete() {
                 </div>
 
                 <!-- Search -->
-                <div class="px-2 py-2 border-b border-base/60 shrink-0">
+                <div class="px-2 py-2 border-b border-line/60 shrink-0">
                     <div class="relative">
                         <Search class="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted/50 pointer-events-none" />
                         <input
                             v-model="searchQuery"
                             type="text"
                             :placeholder="t('notepad.searchPlaceholder')"
-                            class="w-full pl-6 pr-2 py-1.5 bg-surface-2 text-xs text-primary placeholder:text-muted/40 border border-base/60 rounded-md focus:border-indigo-500/60 focus:outline-none transition-colors"
+                            class="w-full pl-6 pr-2 py-1.5 bg-surface-2 text-xs text-primary placeholder:text-muted/40 border border-line/60 rounded-md focus:border-indigo-500/60 focus:outline-none transition-colors"
                         >
                     </div>
                 </div>

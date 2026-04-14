@@ -70,11 +70,11 @@ const devNavItem = computed(() => {
     <div class="min-h-screen bg-bg">
         <!-- Desktop sidebar -->
         <aside
-            class="hidden lg:flex flex-col fixed inset-y-0 left-0 bg-surface border-r border-base z-30 transition-all duration-200"
+            class="hidden lg:flex flex-col fixed inset-y-0 left-0 bg-surface border-r border-line z-30 transition-all duration-200"
             :class="collapsed ? 'w-16' : 'w-60'"
         >
             <div
-                class="flex items-center h-16 border-b border-base shrink-0 transition-all duration-200"
+                class="flex items-center h-16 border-b border-line shrink-0 transition-all duration-200"
                 :class="collapsed ? 'justify-center px-0' : 'justify-between px-4'"
             >
                 <Link v-if="!collapsed" :href="route('dashboard')" class="flex items-center gap-2.5 min-w-0">
@@ -97,7 +97,7 @@ const devNavItem = computed(() => {
                 </button>
             </div>
 
-            <div class="border-b border-base px-4 py-3 shrink-0 flex items-center" :class="collapsed ? 'justify-center' : 'gap-3'">
+            <div class="border-b border-line px-4 py-3 shrink-0 flex items-center" :class="collapsed ? 'justify-center' : 'gap-3'">
                 <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-badge-primary-bg text-sm font-semibold text-badge-primary-text select-none">
                     {{ $page.props.auth.user.name.charAt(0).toUpperCase() }}
                 </div>
@@ -128,7 +128,7 @@ const devNavItem = computed(() => {
                     <span v-if="!collapsed" class="truncate">{{ t('nav.' + item.key) }}</span>
                     <span
                         v-if="collapsed"
-                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-base text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
+                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-line text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
                     >
                         {{ t('nav.' + item.key) }}
                     </span>
@@ -153,14 +153,14 @@ const devNavItem = computed(() => {
                     <span v-if="!collapsed" class="truncate">{{ t('nav.dev-dashboard') }}</span>
                     <span
                         v-if="collapsed"
-                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-base text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
+                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-line text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
                     >
                         {{ t('nav.dev-dashboard') }}
                     </span>
                 </Link>
             </nav>
 
-            <div class="shrink-0 border-t border-base py-3 space-y-0.5" :class="collapsed ? 'px-2' : 'px-3'">
+            <div class="shrink-0 border-t border-line py-3 space-y-0.5" :class="collapsed ? 'px-2' : 'px-3'">
                 <button
                     v-if="collapsed"
                     class="flex items-center justify-center w-full py-2.5 rounded-lg text-muted hover:text-primary hover:bg-surface-2 transition-colors"
@@ -181,7 +181,7 @@ const devNavItem = computed(() => {
                     <span v-if="!collapsed">Mailpit</span>
                     <span
                         v-if="collapsed"
-                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-base text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
+                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-line text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
                     >
                         Mailpit
                     </span>
@@ -197,7 +197,7 @@ const devNavItem = computed(() => {
                     <span v-if="!collapsed">{{ theme === 'dark' ? t('nav.lightMode') : t('nav.darkMode') }}</span>
                     <span
                         v-if="collapsed"
-                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-base text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
+                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-line text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
                     >
                         {{ theme === 'dark' ? t('nav.lightMode') : t('nav.darkMode') }}
                     </span>
@@ -215,7 +215,7 @@ const devNavItem = computed(() => {
                     <span v-if="!collapsed" class="truncate">{{ t('nav.profile') }}</span>
                     <span
                         v-if="collapsed"
-                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-base text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
+                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-line text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
                     >
                         {{ t('nav.profile') }}
                     </span>
@@ -232,7 +232,7 @@ const devNavItem = computed(() => {
                     <span v-if="!collapsed">{{ t('nav.logout') }}</span>
                     <span
                         v-if="collapsed"
-                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-base text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
+                        class="absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-surface-3 border border-line text-xs font-medium text-primary whitespace-nowrap pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
                     >
                         {{ t('nav.logout') }}
                     </span>
@@ -241,7 +241,7 @@ const devNavItem = computed(() => {
         </aside>
 
         <!-- Mobile top bar -->
-        <div class="lg:hidden fixed top-0 inset-x-0 h-14 bg-surface border-b border-base z-30 flex items-center justify-between px-4">
+        <div class="lg:hidden fixed top-0 inset-x-0 h-14 bg-surface border-b border-line z-30 flex items-center justify-between px-4">
             <Link :href="route('dashboard')" class="flex items-center gap-2">
                 <AppLogo :size="28" />
                 <span class="text-primary font-bold text-base tracking-tight">Onyx</span>
@@ -274,7 +274,7 @@ const devNavItem = computed(() => {
                     leave-to-class="-translate-x-full"
                 >
                     <div v-if="showMobileMenu" class="relative w-60 max-w-[85vw] bg-surface h-full flex flex-col shadow-2xl">
-                        <div class="flex items-center justify-between px-4 h-16 border-b border-base shrink-0">
+                        <div class="flex items-center justify-between px-4 h-16 border-b border-line shrink-0">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <AppLogo :size="32" class="shrink-0" />
                                 <span class="text-primary font-bold text-lg tracking-tight truncate leading-tight">Onyx</span>
@@ -284,7 +284,7 @@ const devNavItem = computed(() => {
                             </button>
                         </div>
 
-                        <div class="px-4 py-3 border-b border-base shrink-0 flex items-center gap-3">
+                        <div class="px-4 py-3 border-b border-line shrink-0 flex items-center gap-3">
                             <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-badge-primary-bg text-sm font-semibold text-badge-primary-text select-none">
                                 {{ $page.props.auth.user.name.charAt(0).toUpperCase() }}
                             </div>
@@ -331,7 +331,7 @@ const devNavItem = computed(() => {
                             </Link>
                         </nav>
 
-                        <div class="shrink-0 border-t border-base px-3 py-3 space-y-1">
+                        <div class="shrink-0 border-t border-line px-3 py-3 space-y-1">
                             <a
                                 v-if="isLocal"
                                 href="http://localhost:8025"
@@ -379,7 +379,7 @@ const devNavItem = computed(() => {
             class="transition-all duration-200 pt-14 lg:pt-0"
             :class="collapsed ? 'lg:pl-16' : 'lg:pl-60'"
         >
-            <header v-if="$slots.header" class="bg-surface border-b border-base h-16 flex items-center lg:sticky lg:top-0 lg:z-20">
+            <header v-if="$slots.header" class="bg-surface border-b border-line h-16 flex items-center lg:sticky lg:top-0 lg:z-20">
                 <div class="px-4 sm:px-6 lg:px-8 w-full">
                     <slot name="header" />
                 </div>
