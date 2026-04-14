@@ -653,13 +653,13 @@ async function confirmDelete() {
 
                         <div class="border-t border-base/40" />
 
-                        <!-- Editor / Preview -->
                         <div
                             v-if="!isPreview"
                             class="relative flex-1 flex flex-col"
-                            v-on:dragover="onImageDragOver"
+                            v-on:dragenter.prevent="onImageDragOver"
+                            v-on:dragover.prevent="onImageDragOver"
                             v-on:dragleave="onImageDragLeave"
-                            v-on:drop="onImageDrop"
+                            v-on:drop.prevent="onImageDrop"
                         >
                             <div
                                 v-if="isImageDragOver"

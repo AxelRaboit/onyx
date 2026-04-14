@@ -20,6 +20,12 @@ class NoteImageService
     public function store(UploadedFile $file): string
     {
         $name = sprintf('%s.%s', str_replace('.', '', uniqid('', true)), self::FORMAT);
+        $dir = $this->directory();
+
+        if (! is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
         $path = $this->path($name);
 
         $manager = new ImageManager(new Driver);
