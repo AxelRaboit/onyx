@@ -4,6 +4,7 @@
 
 /* Dark mode: triggered by .dark class on any parent element */
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant hover (&:hover);
 
 @layer base {
     button, [role="button"], [type="button"], [type="submit"], [type="reset"] {
