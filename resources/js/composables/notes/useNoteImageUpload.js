@@ -1,9 +1,21 @@
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import axios from 'axios';
+
+const preventDefault = (e) => e.preventDefault();
 
 export function useNoteImageUpload(editContent, textareaRef) {
     const isUploading = ref(false);
     const isDragOver = ref(false);
+
+    onMounted(() => {
+        document.addEventListener('dragover', preventDefault);
+        document.addEventListener('drop', preventDefault);
+    });
+
+    onUnmounted(() => {
+        document.removeEventListener('dragover', preventDefault);
+        document.removeEventListener('drop', preventDefault);
+    });
 
     async function uploadAndInsert(file) {
         if (!file || !file.type.startsWith('image/')) return;
@@ -29,8 +41,19 @@ export function useNoteImageUpload(editContent, textareaRef) {
         }
     }
 
-    function onDragOver(event) {
-        event.preventDefault();
+    function getImageFile(dataTransfer) {
+        // Files array is populated for OS drags; items for browser-to-browser drags
+        if (dataTransfer.files?.length) {
+            return dataTransfer.files[0];
+        }
+        if (dataTransfer.items?.length) {
+            const item = [...dataTransfer.items].find((i) => i.kind === 'file' && i.type.startsWith('image/'));
+            return item?.getAsFile() ?? null;
+        }
+        return null;
+    }
+
+    function onDragOver() {
         isDragOver.value = true;
     }
 
@@ -39,9 +62,8 @@ export function useNoteImageUpload(editContent, textareaRef) {
     }
 
     function onDrop(event) {
-        event.preventDefault();
         isDragOver.value = false;
-        const file = event.dataTransfer?.files?.[0];
+        const file = getImageFile(event.dataTransfer);
         if (file) uploadAndInsert(file);
     }
 
