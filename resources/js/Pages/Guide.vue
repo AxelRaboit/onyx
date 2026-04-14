@@ -1,4 +1,5 @@
 <script setup>
+import '@css/pages/guide.css';
 import '@css/notes/callouts.css';
 import '@css/notes/checkboxes.css';
 import '@css/notes/code-blocks.css';
@@ -30,7 +31,6 @@ import {
     ImageIcon,
 } from 'lucide-vue-next';
 
-// ── Marked setup (read-only — no wiki-link autocomplete, no embeds) ──────────
 marked.use({
     extensions: [createCalloutExtension()],
     renderer: {
@@ -47,10 +47,8 @@ const PURIFY_CONFIG = {
 
 const { t } = useI18n();
 
-// ── Tabs ──────────────────────────────────────────────────────────────────────
 const activeTab = ref('lexicon');
 
-// ── Demo notes ────────────────────────────────────────────────────────────────
 const DEMO_NOTES = [
     {
         id: 1,
@@ -301,8 +299,6 @@ const activeNote = computed(() => DEMO_NOTES.find((n) => n.id === activeNoteId.v
 function renderDemoNote(content) {
     resetCheckboxCounter();
 
-    // Parse markdown first — marked v18 escapes raw HTML so wiki-links must be
-    // replaced AFTER parsing, directly in the resulting HTML string.
     const parsed = marked.parse(content);
 
     const linked = parsed.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, title, alias) => {
@@ -331,7 +327,6 @@ function handlePreviewClick(event) {
     if (target) activeNoteId.value = target.id;
 }
 
-// ── Lexicon data ──────────────────────────────────────────────────────────────
 const calloutTypes = [
     { type: 'note',     icon: '📝', label: 'note',     aliases: [] },
     { type: 'info',     icon: 'ℹ️',  label: 'info',     aliases: ['abstract', 'summary'] },
@@ -393,9 +388,8 @@ const shortcuts = [
             <AppPageHeader :title="t('guide.title')" :subtitle="t('guide.subtitle')" />
         </template>
 
-        <!-- ── Tab bar ──────────────────────────────────────────────────────── -->
         <div class="max-w-4xl mx-auto mb-8">
-            <div class="flex items-center gap-1 bg-surface border border-base rounded-xl p-1 w-fit">
+            <div class="flex items-center gap-1 bg-surface border border-line rounded-xl p-1 w-fit">
                 <button
                     class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                     :class="activeTab === 'lexicon'
@@ -419,12 +413,8 @@ const shortcuts = [
             </div>
         </div>
 
-        <!-- ════════════════════════════════════════════════════════════════
-             TAB : LEXICON
-         ════════════════════════════════════════════════════════════════ -->
         <div v-if="activeTab === 'lexicon'" class="max-w-4xl mx-auto">
             <div class="space-y-10 pb-8">
-                <!-- Text formatting -->
                 <section>
                     <h2 class="section-title">
                         <Bold class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -433,12 +423,12 @@ const shortcuts = [
                     <div class="card overflow-x-auto">
                         <table class="w-full text-sm min-w-[320px]">
                             <thead>
-                                <tr class="border-b border-base bg-surface-2">
+                                <tr class="border-b border-line bg-surface-2">
                                     <th class="th">{{ t('guide.col.syntax') }}</th>
                                     <th class="th">{{ t('guide.col.result') }}</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-base">
+                            <tbody class="divide-y divide-line">
                                 <tr>
                                     <td class="td"><code class="ci">**bold**</code></td>
                                     <td class="td font-bold text-primary">bold</td>
@@ -460,7 +450,6 @@ const shortcuts = [
                     </div>
                 </section>
 
-                <!-- Headings -->
                 <section>
                     <h2 class="section-title">
                         <Hash class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -469,12 +458,12 @@ const shortcuts = [
                     <div class="card overflow-x-auto">
                         <table class="w-full text-sm min-w-[280px]">
                             <thead>
-                                <tr class="border-b border-base bg-surface-2">
+                                <tr class="border-b border-line bg-surface-2">
                                     <th class="th">{{ t('guide.col.syntax') }}</th>
                                     <th class="th">{{ t('guide.col.result') }}</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-base">
+                            <tbody class="divide-y divide-line">
                                 <tr>
                                     <td class="td"><code class="ci"># Heading 1</code></td>
                                     <td class="td text-2xl font-bold text-primary leading-tight">Heading 1</td>
@@ -492,7 +481,6 @@ const shortcuts = [
                     </div>
                 </section>
 
-                <!-- Lists -->
                 <section>
                     <h2 class="section-title">
                         <List class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -539,7 +527,6 @@ const shortcuts = [
                     </div>
                 </section>
 
-                <!-- Links & embeds -->
                 <section>
                     <h2 class="section-title">
                         <Link2 class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -548,12 +535,12 @@ const shortcuts = [
                     <div class="card overflow-x-auto">
                         <table class="w-full text-sm min-w-[340px]">
                             <thead>
-                                <tr class="border-b border-base bg-surface-2">
+                                <tr class="border-b border-line bg-surface-2">
                                     <th class="th">{{ t('guide.col.syntax') }}</th>
                                     <th class="th">{{ t('guide.col.description') }}</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-base">
+                            <tbody class="divide-y divide-line">
                                 <tr>
                                     <td class="td"><code class="ci">[[Note title]]</code></td>
                                     <td class="td text-secondary">{{ t('guide.linkDesc.wikiLink') }}</td>
@@ -575,7 +562,6 @@ const shortcuts = [
                     </div>
                 </section>
 
-                <!-- Images -->
                 <section>
                     <h2 class="section-title">
                         <ImageIcon class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -584,12 +570,12 @@ const shortcuts = [
                     <div class="card overflow-x-auto mb-4">
                         <table class="w-full text-sm min-w-[340px]">
                             <thead>
-                                <tr class="border-b border-base bg-surface-2">
+                                <tr class="border-b border-line bg-surface-2">
                                     <th class="th">{{ t('guide.col.syntax') }}</th>
                                     <th class="th">{{ t('guide.col.description') }}</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-base">
+                            <tbody class="divide-y divide-line">
                                 <tr>
                                     <td class="td"><code class="ci">![alt](url)</code></td>
                                     <td class="td text-secondary">{{ t('guide.imageDesc.basic') }}</td>
@@ -623,7 +609,6 @@ const shortcuts = [
                     </div>
                 </section>
 
-                <!-- Blockquote & divider -->
                 <section>
                     <h2 class="section-title">
                         <Quote class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -640,12 +625,11 @@ const shortcuts = [
                         <div class="card p-4 space-y-3">
                             <p class="label">{{ t('guide.blockTypes.divider') }}</p>
                             <code class="block text-xs text-indigo-400 font-mono">---</code>
-                            <hr class="border-base">
+                            <hr class="border-line">
                         </div>
                     </div>
                 </section>
 
-                <!-- Code blocks -->
                 <section>
                     <h2 class="section-title">
                         <FileCode class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -663,7 +647,6 @@ function hello(name) {
                     </div>
                 </section>
 
-                <!-- Tables -->
                 <section>
                     <h2 class="section-title">
                         <Table class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -680,18 +663,18 @@ function hello(name) {
                             <table class="text-sm border-collapse min-w-[160px]">
                                 <thead>
                                     <tr>
-                                        <th class="border border-base px-3 py-1.5 text-left font-semibold text-primary bg-surface-2">Name</th>
-                                        <th class="border border-base px-3 py-1.5 text-left font-semibold text-primary bg-surface-2">Role</th>
+                                        <th class="border border-line px-3 py-1.5 text-left font-semibold text-primary bg-surface-2">Name</th>
+                                        <th class="border border-line px-3 py-1.5 text-left font-semibold text-primary bg-surface-2">Role</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="border border-base px-3 py-1.5 text-secondary">Alice</td>
-                                        <td class="border border-base px-3 py-1.5 text-secondary">Admin</td>
+                                        <td class="border border-line px-3 py-1.5 text-secondary">Alice</td>
+                                        <td class="border border-line px-3 py-1.5 text-secondary">Admin</td>
                                     </tr>
                                     <tr>
-                                        <td class="border border-base px-3 py-1.5 text-secondary">Bob</td>
-                                        <td class="border border-base px-3 py-1.5 text-secondary">User</td>
+                                        <td class="border border-line px-3 py-1.5 text-secondary">Bob</td>
+                                        <td class="border border-line px-3 py-1.5 text-secondary">User</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -699,7 +682,6 @@ function hello(name) {
                     </div>
                 </section>
 
-                <!-- Callouts -->
                 <section>
                     <h2 class="section-title">
                         <Layers class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -733,20 +715,19 @@ function hello(name) {
                     </div>
                 </section>
 
-                <!-- Slash commands -->
                 <section>
                     <h2 class="section-title">
                         <Slash class="w-4 h-4 text-indigo-400 shrink-0" />
                         {{ t('guide.sections.slash') }}
                     </h2>
                     <p class="text-sm text-secondary mb-4">{{ t('guide.slashHint') }}</p>
-                    <div class="card divide-y divide-base">
+                    <div class="card divide-y divide-line">
                         <div
                             v-for="cmd in slashCommands"
                             :key="cmd.label"
                             class="flex items-center gap-3 px-4 py-3"
                         >
-                            <span class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-2 border border-base text-xs font-bold text-indigo-400 shrink-0 font-mono">
+                            <span class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-2 border border-line text-xs font-bold text-indigo-400 shrink-0 font-mono">
                                 {{ cmd.icon }}
                             </span>
                             <div class="flex items-center justify-between gap-4 min-w-0 flex-1">
@@ -757,7 +738,6 @@ function hello(name) {
                     </div>
                 </section>
 
-                <!-- Navigation & tools -->
                 <section>
                     <h2 class="section-title">
                         <Navigation class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -780,7 +760,6 @@ function hello(name) {
                     </div>
                 </section>
 
-                <!-- Keyboard shortcuts -->
                 <section>
                     <h2 class="section-title">
                         <Code class="w-4 h-4 text-indigo-400 shrink-0" />
@@ -789,15 +768,15 @@ function hello(name) {
                     <div class="card overflow-x-auto">
                         <table class="w-full text-sm min-w-[280px]">
                             <thead>
-                                <tr class="border-b border-base bg-surface-2">
+                                <tr class="border-b border-line bg-surface-2">
                                     <th class="th">{{ t('guide.col.shortcut') }}</th>
                                     <th class="th">{{ t('guide.col.description') }}</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-base">
+                            <tbody class="divide-y divide-line">
                                 <tr v-for="s in shortcuts" :key="s.key">
                                     <td class="td whitespace-nowrap">
-                                        <kbd class="px-2 py-0.5 rounded bg-surface-2 border border-base text-xs font-mono text-primary">{{ s.key }}</kbd>
+                                        <kbd class="px-2 py-0.5 rounded bg-surface-2 border border-line text-xs font-mono text-primary">{{ s.key }}</kbd>
                                     </td>
                                     <td class="td text-secondary">{{ t('guide.shortcuts.' + s.descKey) }}</td>
                                 </tr>
@@ -808,15 +787,10 @@ function hello(name) {
             </div>
         </div>
 
-        <!-- ════════════════════════════════════════════════════════════════
-             TAB : PREVIEW — mini Notes interface
-         ════════════════════════════════════════════════════════════════ -->
         <div v-if="activeTab === 'preview'" class="pb-8">
-            <!-- Two-pane layout -->
-            <div class="flex border border-base rounded-2xl overflow-hidden bg-surface" style="height: calc(100vh - 280px); min-height: 480px;">
-                <!-- ── Sidebar : note list ──────────────────────────────── -->
-                <div class="w-56 sm:w-64 shrink-0 border-r border-base flex flex-col bg-surface-2 overflow-hidden">
-                    <div class="px-4 py-3 border-b border-base flex items-center justify-between">
+            <div class="flex border border-line rounded-2xl overflow-hidden bg-surface" style="height: calc(100vh - 280px); min-height: 480px;">
+                <div class="w-56 sm:w-64 shrink-0 border-r border-line flex flex-col bg-surface-2 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-line flex items-center justify-between">
                         <span class="text-xs font-semibold text-muted uppercase tracking-wide">Notes</span>
                         <span class="text-xs text-muted">{{ DEMO_NOTES.length }}</span>
                     </div>
@@ -824,7 +798,7 @@ function hello(name) {
                         <button
                             v-for="note in DEMO_NOTES"
                             :key="note.id"
-                            class="w-full text-left px-4 py-3 border-b border-base transition-colors last:border-0"
+                            class="w-full text-left px-4 py-3 border-b border-line transition-colors last:border-0"
                             :class="activeNoteId === note.id
                                 ? 'bg-indigo-600/10 border-l-2 border-l-indigo-500'
                                 : 'hover:bg-surface border-l-2 border-l-transparent'"
@@ -845,10 +819,8 @@ function hello(name) {
                     </div>
                 </div>
 
-                <!-- ── Main panel : rendered note ──────────────────────── -->
                 <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-                    <!-- Note header -->
-                    <div class="px-6 sm:px-10 pt-7 pb-4 border-b border-base shrink-0">
+                    <div class="px-6 sm:px-10 pt-7 pb-4 border-b border-line shrink-0">
                         <h1 class="text-xl sm:text-2xl font-bold text-primary leading-tight">{{ activeNote.title }}</h1>
                         <div class="flex items-center flex-wrap gap-2 mt-2">
                             <span class="text-xs text-muted">{{ activeNote.date }}</span>
@@ -862,7 +834,6 @@ function hello(name) {
                         </div>
                     </div>
 
-                    <!-- Rendered content -->
                     <div
                         class="flex-1 overflow-y-auto scrollbar-thin px-6 sm:px-10 py-6"
                         v-on:click="handlePreviewClick"
@@ -877,36 +848,3 @@ function hello(name) {
         </div>
     </AuthenticatedLayout>
 </template>
-
-<style scoped>
-.section-title {
-    @apply text-base font-semibold text-primary mb-4 flex items-center gap-2;
-}
-.card {
-    @apply bg-surface border border-base rounded-xl;
-}
-.label {
-    @apply text-xs font-semibold text-muted uppercase tracking-wide;
-}
-.th {
-    @apply text-left px-4 py-2.5 font-medium text-secondary;
-}
-.td {
-    @apply px-4 py-2.5;
-}
-.ci {
-    @apply bg-surface-2 border border-base rounded px-1.5 py-0.5 text-xs font-mono text-indigo-300;
-}
-.code-pre {
-    @apply text-xs text-indigo-400 font-mono leading-relaxed;
-    white-space: pre;
-}
-/* Demo wiki-link missing (no matching note in the set) */
-:deep(.wiki-link-missing) {
-    color: #94a3b8;
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    text-underline-offset: 2px;
-    cursor: default;
-}
-</style>
