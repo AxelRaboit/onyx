@@ -43,6 +43,9 @@ export default {
             passwordConfirm: 'Passwort bestätigen',
             alreadyAccount: 'Bereits registriert?',
             submit: 'Registrieren',
+            closedTitle: 'Registrierung geschlossen',
+            closedDesc:
+                'Die Registrierung ist derzeit nicht geöffnet. Versuchen Sie es später oder kontaktieren Sie den Administrator.',
         },
         forgotPassword: {
             title: 'Passwort vergessen',

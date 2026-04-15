@@ -43,6 +43,9 @@ export default {
             passwordConfirm: 'Confirmer le mot de passe',
             alreadyAccount: 'Déjà inscrit ?',
             submit: "S'inscrire",
+            closedTitle: 'Les inscriptions sont fermées',
+            closedDesc:
+                "Les inscriptions ne sont pas ouvertes pour le moment. Revenez plus tard ou contactez l'administrateur.",
         },
         forgotPassword: {
             title: 'Mot de passe oublié',

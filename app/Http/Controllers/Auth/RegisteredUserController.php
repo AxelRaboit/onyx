@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Services\ApplicationParameterService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,15 @@ use Inertia\Response;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(
+        private readonly ApplicationParameterService $params,
+    ) {}
+
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('Auth/Register', [
+            'registrationEnabled' => $this->params->getBool('registration_enabled'),
+        ]);
     }
 
     public function store(RegisterRequest $request): RedirectResponse
