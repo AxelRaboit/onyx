@@ -43,6 +43,8 @@ export default {
             passwordConfirm: 'Confirm Password',
             alreadyAccount: 'Already registered?',
             submit: 'Register',
+            closedTitle: 'Registration is closed',
+            closedDesc: 'Registrations are not open at the moment. Come back later or contact the administrator.',
         },
         forgotPassword: {
             title: 'Forgot Password',
