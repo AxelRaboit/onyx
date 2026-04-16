@@ -1,15 +1,8 @@
 <script setup>
 import AppLogo from '@/components/ui/AppLogo.vue';
 import { Link, usePage } from '@inertiajs/vue3';
-import { Mail } from 'lucide-vue-next';
 
-defineProps({
-    bare: { type: Boolean, default: false },
-});
-
-const page = usePage();
-const appVersion = page.props.appVersion;
-const isLocal = page.props.isLocal ?? false;
+const appVersion = usePage().props.appVersion;
 </script>
 
 <template>
@@ -22,20 +15,8 @@ const isLocal = page.props.isLocal ?? false;
             </Link>
         </div>
 
-        <div v-if="!bare" class="mt-6 w-full overflow-hidden bg-surface border border-line px-6 py-4 shadow-md rounded-lg sm:max-w-md">
+        <div class="mt-6 w-full overflow-hidden bg-surface border border-line px-6 py-4 shadow-md rounded-lg sm:max-w-md">
             <slot />
         </div>
-        <slot v-else />
-
-        <a
-            v-if="isLocal"
-            href="http://localhost:8025"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="mt-6 flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-muted hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
-        >
-            <Mail class="w-3.5 h-3.5" />
-            Mailpit
-        </a>
     </div>
 </template>
