@@ -86,8 +86,8 @@ create-roles: ## Create application roles (ROLE_DEV, ROLE_USER)
 migrate-fresh: ## Drop all tables and re-run all migrations
 	$(ARTISAN) migrate:fresh
 
-fixtures: ## Drop all tables, re-run migrations and seed
-	$(ARTISAN) migrate:fresh --seed
+fixtures: ## Drop all tables, re-run migrations, seed and sync application parameters
+	$(ARTISAN) onyx:install --fresh --seed
 
 # === Tests ===
 db-test: ## Create the test database and run migrations

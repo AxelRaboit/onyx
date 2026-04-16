@@ -10,6 +10,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('application_parameters')) {
+            return;
+        }
+
         Schema::create('application_parameters', function (Blueprint $table): void {
             $table->string('key', 100)->primary();
             $table->text('value')->nullable();

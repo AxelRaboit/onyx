@@ -3,6 +3,10 @@ import AppLogo from '@/components/ui/AppLogo.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Mail } from 'lucide-vue-next';
 
+defineProps({
+    bare: { type: Boolean, default: false },
+});
+
 const page = usePage();
 const appVersion = page.props.appVersion;
 const isLocal = page.props.isLocal ?? false;
@@ -18,9 +22,10 @@ const isLocal = page.props.isLocal ?? false;
             </Link>
         </div>
 
-        <div class="mt-6 w-full overflow-hidden bg-surface border border-line px-6 py-4 shadow-md rounded-lg sm:max-w-md">
+        <div v-if="!bare" class="mt-6 w-full overflow-hidden bg-surface border border-line px-6 py-4 shadow-md rounded-lg sm:max-w-md">
             <slot />
         </div>
+        <slot v-else />
 
         <a
             v-if="isLocal"
