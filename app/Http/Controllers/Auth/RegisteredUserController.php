@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
@@ -30,6 +31,8 @@ class RegisteredUserController extends Controller
 
     public function store(RegisterRequest $request): RedirectResponse
     {
+        abort_unless($this->params->getBool('registration_enabled'), HttpStatus::Forbidden->value);
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
