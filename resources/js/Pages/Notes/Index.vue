@@ -23,6 +23,7 @@ import { useSlashCommands } from '@/composables/notes/useSlashCommands';
 import { useNoteTemplates } from '@/composables/notes/useNoteTemplates';
 import { useNoteImageUpload } from '@/composables/notes/useNoteImageUpload';
 import { useNoteImageResize } from '@/composables/notes/useNoteImageResize';
+import { slugify } from '@/utils/text';
 import { BookTemplate, Save, CalendarDays } from 'lucide-vue-next';
 import NoteGraph from '@/components/notes/NoteGraph.vue';
 import { Link2, Unlink, List, GitBranch } from 'lucide-vue-next';
@@ -37,7 +38,7 @@ marked.use({
     renderer: {
         heading({ tokens, depth }) {
             const text = this.parser.parseInline(tokens);
-            const slug = text.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^\w]+/g, '-').replace(/(^-|-$)/g, '');
+            const slug = slugify(text);
             return `<h${depth} id="${slug}">${text}</h${depth}>\n`;
         },
         image({ href, title, text }) {
@@ -201,7 +202,7 @@ const previewContainer = ref(null);
 
 function scrollToHeading(heading) {
     if (!previewContainer.value) return;
-    const slug = heading.toLowerCase().replace(/[^\w]+/g, '-').replace(/(^-|-$)/g, '');
+    const slug = slugify(heading);
     const target = previewContainer.value.querySelector(`#${CSS.escape(slug)}`);
     if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
