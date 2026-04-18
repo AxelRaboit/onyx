@@ -12,6 +12,7 @@ let animationFrame = null;
 let dragNode = null;
 let offsetX = 0;
 let offsetY = 0;
+let dragged = false;
 
 async function loadGraph() {
     loading.value = true;
@@ -38,6 +39,7 @@ async function loadGraph() {
 }
 
 function simulate() {
+    if (animationFrame) cancelAnimationFrame(animationFrame);
     const iterations = 120;
     let frame = 0;
 
@@ -172,9 +174,11 @@ function onMouseDown(event) {
     const node = getMouseNode(event);
     if (!node) return;
     dragNode = node;
+    dragged = false;
     const rect = canvas.value.getBoundingClientRect();
     offsetX = event.clientX - rect.left - node.x;
     offsetY = event.clientY - rect.top - node.y;
+    simulate();
 }
 
 function onMouseMove(event) {
@@ -183,6 +187,7 @@ function onMouseMove(event) {
         canvas.value.style.cursor = node ? 'pointer' : 'default';
         return;
     }
+    dragged = true;
     const rect = canvas.value.getBoundingClientRect();
     dragNode.x = event.clientX - rect.left - offsetX;
     dragNode.y = event.clientY - rect.top - offsetY;
@@ -194,6 +199,10 @@ function onMouseUp() {
 }
 
 function onClick(event) {
+    if (dragged) {
+        dragged = false;
+        return;
+    }
     const node = getMouseNode(event);
     if (node) {
         emit('select', node.id);
