@@ -1,5 +1,6 @@
 import AppBadge from '@/components/ui/AppBadge.vue';
 import AppButton from '@/components/ui/AppButton.vue';
+import AppInput from '@/components/form/AppInput.vue';
 import AppModal from '@/components/ui/AppModal.vue';
 import AppPageHeader from '@/components/ui/AppPageHeader.vue';
 import AppPagination from '@/components/ui/AppPagination.vue';
@@ -22,6 +23,7 @@ export default {
     install(app) {
         app.component('AppBadge', AppBadge);
         app.component('AppButton', AppButton);
+        app.component('AppInput', AppInput);
         app.component('AppModal', AppModal);
         app.component('AppPageHeader', AppPageHeader);
         app.component('AppPagination', AppPagination);
