@@ -94,12 +94,12 @@ class DatabaseSeeder extends Seeder
             - [[Ideas]] — brainstorm libre
 
             > [!tip] Raccourci
-            > Tape `/` en début de ligne pour insérer un bloc, ou `[[` pour lier une note.
+            > Tape `/` en début de ligne pour insérer un bloc, ou doubles crochets pour lier une note.
 
             ---
 
             > [!info] À propos d'Onyx
-            > Onyx supporte le Markdown complet, les liens wiki `[[note]]`, les callouts, les blocs de code avec coloration syntaxique et les cases à cocher interactives.
+            > Onyx supporte le Markdown complet, les liens wiki, les callouts, les blocs de code avec coloration syntaxique et les cases à cocher interactives.
             MD,
         ]);
 
@@ -217,7 +217,7 @@ class DatabaseSeeder extends Seeder
             - [[Laravel Tips]] — Eloquent, queues, artisan
 
             > [!abstract] Méthode
-            > Une note = un concept. Relier les concepts avec des `[[wiki-links]]`.
+            > Une note = un concept. Relier les concepts avec des liens wiki.
             MD,
         ]);
 
@@ -460,11 +460,11 @@ class DatabaseSeeder extends Seeder
             - liste  1. numérotée  - [ ] checkbox
             > citation
             ---
-            [[Note liée]]  ![[Note intégrée]]
+            Lien wiki : doubles crochets autour du titre de la note
             > [!tip] Callout
             ```
 
-            Voir le [[Start here|guide de démarrage]] pour une introduction complète.
+            Voir le [[Start here]] pour une introduction complète.
             MD,
         ]);
 
