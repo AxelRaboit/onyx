@@ -58,6 +58,28 @@ export function createWikiLinkExtension() {
 }
 
 /**
+ * Fallback: converts any remaining [[...]] patterns in rendered HTML to wiki-link anchors.
+ * Needed because marked's built-in link tokenizer can consume `[` before the inline
+ * extension gets a chance to match `[[...]]` inside list items.
+ */
+export function applyWikiLinksToHtml(html) {
+    return html.replace(/\[\[([^\]<>]+?)\]\]/g, (match, inner) => {
+        const trimmed = inner.trim();
+        const hashIdx = trimmed.indexOf('#');
+        let noteTitle = trimmed;
+        let heading = '';
+        if (hashIdx !== -1) {
+            noteTitle = trimmed.slice(0, hashIdx).trim();
+            heading = trimmed.slice(hashIdx + 1).trim();
+        }
+        const escape = (str) =>
+            str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        const displayText = heading && noteTitle ? `${noteTitle} > ${heading}` : heading || noteTitle;
+        return `<a class="wiki-link" data-note-title="${escape(noteTitle)}" data-heading="${escape(heading)}">${escape(displayText)}</a>`;
+    });
+}
+
+/**
  * Autocomplete logic for [[wiki-links]] inside a textarea.
  */
 export function useWikiLinkAutocomplete(flatNotes) {

@@ -11,7 +11,7 @@ import AppPageHeader from '@/components/ui/AppPageHeader.vue';
 import ConfirmModal from '@/components/ui/ConfirmModal.vue';
 import NoteTree from '@/components/notes/NoteTree.vue';
 import { useNoteTree } from '@/composables/notes/useNoteTree';
-import { createWikiLinkExtension, useWikiLinkAutocomplete } from '@/composables/notes/useNoteWikiLinks';
+import { createWikiLinkExtension, useWikiLinkAutocomplete, applyWikiLinksToHtml } from '@/composables/notes/useNoteWikiLinks';
 import { createCalloutExtension } from '@/composables/notes/markedCallouts';
 import { createEmbedExtension } from '@/composables/notes/markedEmbeds';
 import { createCheckboxRenderer, resetCheckboxCounter, toggleCheckboxInContent } from '@/composables/notes/markedCheckboxes';
@@ -264,7 +264,7 @@ async function onPreviewClick(event) {
                 headers: { Accept: 'application/json' },
             });
             const noteContent = response.data.content ?? '';
-            contentEl.innerHTML = DOMPurify.sanitize(marked.parse(noteContent), PURIFY_CONFIG);
+            contentEl.innerHTML = DOMPurify.sanitize(applyWikiLinksToHtml(marked.parse(noteContent)), PURIFY_CONFIG);
         } catch {
             contentEl.innerHTML = '<span class="note-embed-placeholder">Failed to load</span>';
         }
@@ -404,7 +404,7 @@ const PURIFY_CONFIG = {
 
 const renderedContent = computed(() => {
     resetCheckboxCounter();
-    return DOMPurify.sanitize(marked.parse(editContent.value || ''), PURIFY_CONFIG);
+    return DOMPurify.sanitize(applyWikiLinksToHtml(marked.parse(editContent.value || '')), PURIFY_CONFIG);
 });
 
 useNoteImageResize(previewContainer, renderedContent, editContent);
