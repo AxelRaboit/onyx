@@ -59,10 +59,10 @@ export function useNoteTree(initialNotes) {
         loadedNote.value = null;
         loadingNote.value = true;
         try {
-            const res = await axios.get(route('notes.show', id), {
+            const response = await axios.get(route('notes.show', id), {
                 headers: { Accept: 'application/json' },
             });
-            loadedNote.value = res.data;
+            loadedNote.value = response.data;
         } finally {
             loadingNote.value = false;
         }
@@ -70,9 +70,9 @@ export function useNoteTree(initialNotes) {
 
     // ── CRUD ──────────────────────────────────────────────────────────────────
     async function createNote(parentId = null) {
-        const res = await axios.post(route('notes.store'), { parent_id: parentId });
-        flatNotes.value.push(res.data);
-        await selectNote(res.data.id);
+        const response = await axios.post(route('notes.store'), { parent_id: parentId });
+        flatNotes.value.push(response.data);
+        await selectNote(response.data.id);
     }
 
     async function deleteNote(id) {
@@ -102,14 +102,14 @@ export function useNoteTree(initialNotes) {
 
     async function moveNote(noteId, newParentId) {
         // Guard: no-op if already in the same parent
-        const note = flatNotes.value.find((n) => n.id === noteId);
+        const note = flatNotes.value.find((existingNote) => existingNote.id === noteId);
         if (note && note.parent_id === newParentId) return;
 
         // Guard: cannot move into own descendant
         if (newParentId !== null && collectDescendants(noteId).has(newParentId)) return;
 
         await axios.patch(route('notes.move', noteId), { parent_id: newParentId });
-        const idx = flatNotes.value.findIndex((n) => n.id === noteId);
+        const idx = flatNotes.value.findIndex((existingNote) => existingNote.id === noteId);
         if (idx !== -1) {
             flatNotes.value[idx] = { ...flatNotes.value[idx], parent_id: newParentId };
         }

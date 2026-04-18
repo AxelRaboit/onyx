@@ -5,8 +5,8 @@ defineProps({
     size: { type: Number, default: 40 },
 });
 
-const uid = getCurrentInstance().uid;
-const gradientId = `onyx-bg-${uid}`;
+const instanceUid = getCurrentInstance().uid;
+const gradientId = `onyx-bg-${instanceUid}`;
 </script>
 
 <template>

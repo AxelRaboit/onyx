@@ -46,7 +46,7 @@ class DevDashboardController extends Controller
         $search = $request->query('search', '');
 
         $users = User::with('roles')
-            ->when($search, fn ($q) => $q->where('name', 'like', sprintf('%%%s%%', $search))->orWhere('email', 'like', sprintf('%%%s%%', $search)))
+            ->when($search, fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $search))->orWhere('email', 'like', sprintf('%%%s%%', $search)))
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 

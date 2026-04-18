@@ -58,15 +58,15 @@ export function useNoteImageResize(previewContainer, renderedContent, editConten
                 handle.style.opacity = '0';
             });
 
-            handle.addEventListener('mousedown', (e) => onHandleMousedown(e, img));
+            handle.addEventListener('mousedown', (event) => onHandleMousedown(event, img));
         });
     }
 
-    function onHandleMousedown(e, img) {
-        e.preventDefault();
-        e.stopPropagation();
+    function onHandleMousedown(event, img) {
+        event.preventDefault();
+        event.stopPropagation();
 
-        const startX = e.clientX;
+        const startX = event.clientX;
         const startWidth = img.naturalWidth && img.width ? img.width : img.getBoundingClientRect().width;
 
         function onMousemove(moveEvent) {

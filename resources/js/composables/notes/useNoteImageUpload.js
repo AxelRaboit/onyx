@@ -47,7 +47,9 @@ export function useNoteImageUpload(editContent, textareaRef) {
             return dataTransfer.files[0];
         }
         if (dataTransfer.items?.length) {
-            const item = [...dataTransfer.items].find((i) => i.kind === 'file' && i.type.startsWith('image/'));
+            const item = [...dataTransfer.items].find(
+                (transferItem) => transferItem.kind === 'file' && transferItem.type.startsWith('image/')
+            );
             return item?.getAsFile() ?? null;
         }
         return null;

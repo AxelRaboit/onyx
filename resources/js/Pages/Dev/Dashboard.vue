@@ -10,7 +10,7 @@ import { Activity, Check, Mail, NotebookText, Pencil, Shield, Trash2, UserRound,
 import { useI18n } from 'vue-i18n';
 import { onMounted, ref } from 'vue';
 
-const { t } = useI18n();
+const { t: translate } = useI18n();
 
 const props = defineProps({
     tab: { type: String, default: 'stats' },
@@ -70,7 +70,7 @@ const saveParameter = async (param) => {
     editSaving.value = true;
     const url = props.parameterUpdatePath.replace('__key__', encodeURIComponent(param.key));
     try {
-        const res = await fetch(url, {
+        const response = await fetch(url, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const saveParameter = async (param) => {
             },
             body: JSON.stringify({ value: editingValue.value }),
         });
-        if (res.ok) {
+        if (response.ok) {
             param.value = editingValue.value || null;
             editingKey.value = null;
         }
@@ -104,11 +104,11 @@ const submitInvitation = () => {
 </script>
 
 <template>
-    <Head :title="t('admin.title')" />
+    <Head :title="translate('admin.title')" />
 
     <AuthenticatedLayout>
         <template #header>
-            <AppPageHeader :title="t('admin.title')" />
+            <AppPageHeader :title="translate('admin.title')" />
         </template>
 
         <div class="space-y-6">
@@ -122,7 +122,7 @@ const submitInvitation = () => {
                         :class="tab === 'stats' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
                     >
                         <Activity class="w-3.5 h-3.5" :stroke-width="2" />
-                        {{ t('admin.stats.title') }}
+                        {{ translate('admin.stats.title') }}
                     </Link>
                     <Link
                         :href="route('dev.dashboard.users')"
@@ -131,7 +131,7 @@ const submitInvitation = () => {
                         :class="tab === 'users' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
                     >
                         <Users class="w-3.5 h-3.5" :stroke-width="2" />
-                        {{ t('admin.users.title') }}
+                        {{ translate('admin.users.title') }}
                     </Link>
                     <Link
                         :href="route('dev.dashboard.invitations')"
@@ -140,7 +140,7 @@ const submitInvitation = () => {
                         :class="tab === 'invitations' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
                     >
                         <Mail class="w-3.5 h-3.5" :stroke-width="2" />
-                        {{ t('admin.invitations.title') }}
+                        {{ translate('admin.invitations.title') }}
                     </Link>
                     <Link
                         :href="route('dev.dashboard.parameters')"
@@ -149,7 +149,7 @@ const submitInvitation = () => {
                         :class="tab === 'parameters' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
                     >
                         <Shield class="w-3.5 h-3.5" :stroke-width="2" />
-                        {{ t('admin.parameters.title') }}
+                        {{ translate('admin.parameters.title') }}
                     </Link>
                 </nav>
             </div>
@@ -158,7 +158,7 @@ const submitInvitation = () => {
             <div v-if="tab === 'stats' && stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="bg-surface border border-line rounded-xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ t('admin.stats.usersTotal') }}</span>
+                        <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ translate('admin.stats.usersTotal') }}</span>
                         <div class="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
                             <Users class="w-4 h-4 text-indigo-400" />
                         </div>
@@ -166,19 +166,19 @@ const submitInvitation = () => {
                     <p class="text-2xl font-bold text-indigo-400">{{ stats.users.total }}</p>
                     <p class="text-xs text-secondary mt-1.5">
                         <span class="text-indigo-400 font-medium">+{{ stats.users.newThisMonth }}</span>
-                        {{ ' ' + t('admin.stats.usersNewThisMonth').toLowerCase() }}
+                        {{ ' ' + translate('admin.stats.usersNewThisMonth').toLowerCase() }}
                     </p>
                 </div>
 
                 <div class="bg-surface border border-line rounded-xl p-5">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ t('admin.stats.notesTotal') }}</span>
+                        <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ translate('admin.stats.notesTotal') }}</span>
                         <div class="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
                             <NotebookText class="w-4 h-4 text-indigo-400" />
                         </div>
                     </div>
                     <p class="text-2xl font-bold text-indigo-400">{{ stats.notes }}</p>
-                    <p class="text-xs text-secondary mt-1.5">{{ t('admin.stats.notes') }}</p>
+                    <p class="text-xs text-secondary mt-1.5">{{ translate('admin.stats.notes') }}</p>
                 </div>
             </div>
 
@@ -188,7 +188,7 @@ const submitInvitation = () => {
                     <input
                         v-model="searchInput"
                         type="text"
-                        :placeholder="t('admin.users.searchPlaceholder')"
+                        :placeholder="translate('admin.users.searchPlaceholder')"
                         class="flex-1 px-4 py-2 rounded-lg bg-surface-2 border border-line text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         v-on:keyup.enter="performSearch"
                     >
@@ -196,11 +196,11 @@ const submitInvitation = () => {
                         class="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-sm font-medium"
                         v-on:click="performSearch"
                     >
-                        {{ t('admin.users.search') }}
+                        {{ translate('admin.users.search') }}
                     </button>
                 </div>
 
-                <EmptyState v-if="users && users.data.length === 0" icon="search" :message="t('admin.users.empty')" />
+                <EmptyState v-if="users && users.data.length === 0" icon="search" :message="translate('admin.users.empty')" />
 
                 <template v-if="users && users.data.length > 0">
                     <!-- Mobile cards -->
@@ -220,10 +220,10 @@ const submitInvitation = () => {
                                 <div class="flex items-center gap-1">
                                     <button
                                         class="p-1.5 rounded text-muted transition-colors"
-                                        :class="user.roles?.some(r => r.name === 'ROLE_DEV') ? 'hover:text-indigo-400' : 'hover:text-rose-400'"
+                                        :class="user.roles?.some((role) => role.name === 'ROLE_DEV') ? 'hover:text-indigo-400' : 'hover:text-rose-400'"
                                         v-on:click="pendingToggleUser = user"
                                     >
-                                        <component :is="user.roles?.some(r => r.name === 'ROLE_DEV') ? UserRound : Shield" class="w-4 h-4" />
+                                        <component :is="user.roles?.some((role) => role.name === 'ROLE_DEV') ? UserRound : Shield" class="w-4 h-4" />
                                     </button>
                                     <button class="p-1.5 rounded text-muted hover:text-red-400 transition-colors" v-on:click="pendingDeleteUser = user">
                                         <Trash2 class="w-4 h-4" />
@@ -238,11 +238,11 @@ const submitInvitation = () => {
                         <table class="w-full min-w-[560px]">
                             <thead class="bg-surface-2 border-b border-line">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary">{{ t('admin.users.name') }}</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden sm:table-cell">{{ t('admin.users.email') }}</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden md:table-cell">{{ t('admin.users.roles') }}</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden lg:table-cell">{{ t('admin.users.created') }}</th>
-                                    <th class="px-4 py-3 text-right text-sm font-semibold text-primary">{{ t('admin.users.actions') }}</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary">{{ translate('admin.users.name') }}</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden sm:table-cell">{{ translate('admin.users.email') }}</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden md:table-cell">{{ translate('admin.users.roles') }}</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-primary hidden lg:table-cell">{{ translate('admin.users.created') }}</th>
+                                    <th class="px-4 py-3 text-right text-sm font-semibold text-primary">{{ translate('admin.users.actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-line">
@@ -261,15 +261,15 @@ const submitInvitation = () => {
                                         <div class="flex items-center justify-end gap-1">
                                             <button
                                                 class="p-1.5 rounded text-muted transition-colors"
-                                                :class="user.roles?.some(r => r.name === 'ROLE_DEV') ? 'hover:text-indigo-400' : 'hover:text-rose-400'"
-                                                :title="user.roles?.some(r => r.name === 'ROLE_DEV') ? t('admin.users.makeUser') : t('admin.users.makeDev')"
+                                                :class="user.roles?.some((role) => role.name === 'ROLE_DEV') ? 'hover:text-indigo-400' : 'hover:text-rose-400'"
+                                                :title="user.roles?.some((role) => role.name === 'ROLE_DEV') ? translate('admin.users.makeUser') : translate('admin.users.makeDev')"
                                                 v-on:click="pendingToggleUser = user"
                                             >
-                                                <component :is="user.roles?.some(r => r.name === 'ROLE_DEV') ? UserRound : Shield" class="w-4 h-4" />
+                                                <component :is="user.roles?.some((role) => role.name === 'ROLE_DEV') ? UserRound : Shield" class="w-4 h-4" />
                                             </button>
                                             <button
                                                 class="p-1.5 rounded text-muted hover:text-red-400 transition-colors"
-                                                :title="t('admin.users.deleteUser', { name: user.name })"
+                                                :title="translate('admin.users.deleteUser', { name: user.name })"
                                                 v-on:click="pendingDeleteUser = user"
                                             >
                                                 <Trash2 class="w-4 h-4" />
@@ -289,46 +289,46 @@ const submitInvitation = () => {
 
             <!-- Invitations tab -->
             <div v-if="tab === 'invitations'" class="max-w-lg space-y-4">
-                <p class="text-sm text-secondary">{{ t('admin.invitations.description') }}</p>
+                <p class="text-sm text-secondary">{{ translate('admin.invitations.description') }}</p>
 
                 <form class="space-y-4" v-on:submit.prevent="submitInvitation">
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-primary">{{ t('admin.invitations.email') }}</label>
+                        <label class="block text-sm font-medium text-primary">{{ translate('admin.invitations.email') }}</label>
                         <input
                             v-model="invitationForm.email"
                             type="email"
-                            :placeholder="t('admin.invitations.emailPlaceholder')"
+                            :placeholder="translate('admin.invitations.emailPlaceholder')"
                             class="w-full px-4 py-2 rounded-lg bg-surface-2 border border-line text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
                         <p v-if="invitationForm.errors.email" class="text-xs text-red-400">{{ invitationForm.errors.email }}</p>
                     </div>
 
                     <div class="space-y-1">
-                        <label class="block text-sm font-medium text-primary">{{ t('admin.invitations.message') }}</label>
+                        <label class="block text-sm font-medium text-primary">{{ translate('admin.invitations.message') }}</label>
                         <textarea
                             v-model="invitationForm.message"
                             rows="5"
-                            :placeholder="t('admin.invitations.messagePlaceholder')"
+                            :placeholder="translate('admin.invitations.messagePlaceholder')"
                             class="w-full px-4 py-2 rounded-lg bg-surface-2 border border-line text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
                         />
                         <p v-if="invitationForm.errors.message" class="text-xs text-red-400">{{ invitationForm.errors.message }}</p>
                     </div>
 
                     <div class="border border-line rounded-lg p-4 space-y-3 bg-surface-2/50">
-                        <p class="text-xs text-secondary">{{ t('admin.invitations.credentialsHint') }}</p>
+                        <p class="text-xs text-secondary">{{ translate('admin.invitations.credentialsHint') }}</p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div class="space-y-1">
-                                <label class="block text-sm font-medium text-primary">{{ t('admin.invitations.credentialEmail') }}</label>
+                                <label class="block text-sm font-medium text-primary">{{ translate('admin.invitations.credentialEmail') }}</label>
                                 <input
                                     v-model="invitationForm.credential_email"
                                     type="email"
-                                    :placeholder="t('admin.invitations.emailPlaceholder')"
+                                    :placeholder="translate('admin.invitations.emailPlaceholder')"
                                     class="w-full px-4 py-2 rounded-lg bg-surface border border-line text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 >
                                 <p v-if="invitationForm.errors.credential_email" class="text-xs text-red-400">{{ invitationForm.errors.credential_email }}</p>
                             </div>
                             <div class="space-y-1">
-                                <label class="block text-sm font-medium text-primary">{{ t('admin.invitations.credentialPassword') }}</label>
+                                <label class="block text-sm font-medium text-primary">{{ translate('admin.invitations.credentialPassword') }}</label>
                                 <input
                                     v-model="invitationForm.credential_password"
                                     type="text"
@@ -345,14 +345,14 @@ const submitInvitation = () => {
                         class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors text-sm font-medium"
                     >
                         <Mail class="w-4 h-4" />
-                        {{ invitationForm.processing ? t('admin.invitations.sending') : t('admin.invitations.send') }}
+                        {{ invitationForm.processing ? translate('admin.invitations.sending') : translate('admin.invitations.send') }}
                     </button>
                 </form>
             </div>
 
             <!-- Parameters tab -->
             <div v-if="tab === 'parameters'" class="space-y-3">
-                <EmptyState v-if="parameters.length === 0" icon="settings" :message="t('admin.parameters.empty')" />
+                <EmptyState v-if="parameters.length === 0" icon="settings" :message="translate('admin.parameters.empty')" />
 
                 <template v-else>
                     <!-- Mobile cards -->
@@ -374,10 +374,10 @@ const submitInvitation = () => {
                                 >
                                 <div class="flex gap-2">
                                     <button :disabled="editSaving" class="flex-1 py-1.5 text-sm bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg transition-colors" v-on:click="saveParameter(param)">
-                                        {{ t('common.save') }}
+                                        {{ translate('common.save') }}
                                     </button>
                                     <button class="flex-1 py-1.5 text-sm text-secondary hover:text-primary border border-line rounded-lg transition-colors" v-on:click="cancelEdit">
-                                        {{ t('common.cancel') }}
+                                        {{ translate('common.cancel') }}
                                     </button>
                                 </div>
                             </template>
@@ -391,9 +391,9 @@ const submitInvitation = () => {
                         <table class="w-full">
                             <thead class="bg-surface-2 border-b border-line">
                                 <tr>
-                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary w-1/3">{{ t('admin.parameters.key') }}</th>
-                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary w-1/4">{{ t('admin.parameters.value') }}</th>
-                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary">{{ t('admin.parameters.description') }}</th>
+                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary w-1/3">{{ translate('admin.parameters.key') }}</th>
+                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary w-1/4">{{ translate('admin.parameters.value') }}</th>
+                                    <th class="px-5 py-3 text-left text-sm font-semibold text-primary">{{ translate('admin.parameters.description') }}</th>
                                     <th class="px-4 py-3 w-16" />
                                 </tr>
                             </thead>
@@ -451,8 +451,8 @@ const submitInvitation = () => {
 
     <ConfirmModal
         :show="!!pendingToggleUser"
-        :message="pendingToggleUser ? t('admin.users.confirmToggle', { name: pendingToggleUser.name }) : ''"
-        :confirm-label="pendingToggleUser?.roles?.some(r => r.name === 'ROLE_DEV') ? t('admin.users.makeUser') : t('admin.users.makeDev')"
+        :message="pendingToggleUser ? translate('admin.users.confirmToggle', { name: pendingToggleUser.name }) : ''"
+        :confirm-label="pendingToggleUser?.roles?.some((role) => role.name === 'ROLE_DEV') ? translate('admin.users.makeUser') : translate('admin.users.makeDev')"
         confirm-variant="indigo"
         v-on:confirm="doToggleRole"
         v-on:cancel="pendingToggleUser = null"
@@ -460,7 +460,7 @@ const submitInvitation = () => {
 
     <ConfirmModal
         :show="!!pendingDeleteUser"
-        :message="pendingDeleteUser ? t('admin.users.confirmDelete', { name: pendingDeleteUser.name }) : ''"
+        :message="pendingDeleteUser ? translate('admin.users.confirmDelete', { name: pendingDeleteUser.name }) : ''"
         confirm-variant="danger"
         v-on:confirm="doDeleteUser"
         v-on:cancel="pendingDeleteUser = null"
