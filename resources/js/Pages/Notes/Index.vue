@@ -32,6 +32,7 @@ import '@css/notes/callouts.css';
 import '@css/notes/embeds.css';
 import '@css/notes/checkboxes.css';
 import '@css/notes/code-blocks.css';
+import { usePreference } from '@/composables/usePreference';
 
 marked.use({
     extensions: [createEmbedExtension(), createWikiLinkExtension(), createCalloutExtension()],
@@ -311,7 +312,7 @@ const {
 } = useNoteImageUpload(editContent, contentTextarea);
 const editTags    = ref([]);
 const tagInput    = ref('');
-const isPreview   = ref(false);
+const isPreview   = usePreference('onyx:preview-mode', false);
 const showOutline    = ref(false);
 const showGraph      = ref(false);
 const showTemplates  = ref(false);
@@ -363,7 +364,6 @@ watch(loadedNote, (note) => {
     editTitle.value   = note.title   ?? '';
     editContent.value = note.content ?? '';
     editTags.value    = [...(note.tags ?? [])];
-    isPreview.value   = false;
     saveStatus.value  = 'idle';
 });
 
