@@ -11,7 +11,7 @@ import AppPageHeader from '@/components/ui/AppPageHeader.vue';
 import ConfirmModal from '@/components/ui/ConfirmModal.vue';
 import NoteTree from '@/components/notes/NoteTree.vue';
 import { useNoteTree } from '@/composables/notes/useNoteTree';
-import { createWikiLinkExtension, useWikiLinkAutocomplete } from '@/composables/notes/useNoteWikiLinks';
+import { createWikiLinkExtension, useWikiLinkAutocomplete, applyWikiLinksToHtml } from '@/composables/notes/useNoteWikiLinks';
 import { createCalloutExtension } from '@/composables/notes/markedCallouts';
 import { createEmbedExtension } from '@/composables/notes/markedEmbeds';
 import { createCheckboxRenderer, resetCheckboxCounter, toggleCheckboxInContent } from '@/composables/notes/markedCheckboxes';
@@ -32,6 +32,7 @@ import '@css/notes/callouts.css';
 import '@css/notes/embeds.css';
 import '@css/notes/checkboxes.css';
 import '@css/notes/code-blocks.css';
+import { usePreference } from '@/composables/usePreference';
 
 marked.use({
     extensions: [createEmbedExtension(), createWikiLinkExtension(), createCalloutExtension()],
@@ -264,7 +265,7 @@ async function onPreviewClick(event) {
                 headers: { Accept: 'application/json' },
             });
             const noteContent = response.data.content ?? '';
-            contentEl.innerHTML = DOMPurify.sanitize(marked.parse(noteContent), PURIFY_CONFIG);
+            contentEl.innerHTML = DOMPurify.sanitize(applyWikiLinksToHtml(marked.parse(noteContent)), PURIFY_CONFIG);
         } catch {
             contentEl.innerHTML = '<span class="note-embed-placeholder">Failed to load</span>';
         }
@@ -311,7 +312,7 @@ const {
 } = useNoteImageUpload(editContent, contentTextarea);
 const editTags    = ref([]);
 const tagInput    = ref('');
-const isPreview   = ref(false);
+const isPreview   = usePreference('onyx:preview-mode', false);
 const showOutline    = ref(false);
 const showGraph      = ref(false);
 const showTemplates  = ref(false);
@@ -363,7 +364,6 @@ watch(loadedNote, (note) => {
     editTitle.value   = note.title   ?? '';
     editContent.value = note.content ?? '';
     editTags.value    = [...(note.tags ?? [])];
-    isPreview.value   = false;
     saveStatus.value  = 'idle';
 });
 
@@ -404,7 +404,7 @@ const PURIFY_CONFIG = {
 
 const renderedContent = computed(() => {
     resetCheckboxCounter();
-    return DOMPurify.sanitize(marked.parse(editContent.value || ''), PURIFY_CONFIG);
+    return DOMPurify.sanitize(applyWikiLinksToHtml(marked.parse(editContent.value || '')), PURIFY_CONFIG);
 });
 
 useNoteImageResize(previewContainer, renderedContent, editContent);
