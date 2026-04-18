@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import axios from 'axios';
+import { truncate } from '@/utils/text';
 
 const emit = defineEmits(['select']);
 
@@ -153,10 +154,6 @@ function draw() {
         ctx.textAlign = 'center';
         ctx.fillText(truncate(node.title, 20), node.x, node.y + 16);
     });
-}
-
-function truncate(text, maxLength) {
-    return text.length > maxLength ? text.slice(0, maxLength) + '…' : text;
 }
 
 function getMouseNode(event) {

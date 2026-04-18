@@ -2,18 +2,13 @@
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { decodeHtml } from '@/utils/text';
 
 const props = defineProps({
     meta: { type: Object, required: true },
 });
 
 const { t: translate } = useI18n({ useScope: 'global' });
-
-function decodeHtml(html) {
-    const textareaElement = document.createElement('textarea');
-    textareaElement.innerHTML = html;
-    return textareaElement.value;
-}
 
 const prevLink = computed(() => props.meta.links?.[0] ?? null);
 const nextLink = computed(() => props.meta.links?.[props.meta.links.length - 1] ?? null);
