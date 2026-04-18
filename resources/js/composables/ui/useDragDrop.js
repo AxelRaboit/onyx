@@ -33,8 +33,8 @@ export function useDragDrop(items, onReorder) {
         if (!fromId || fromId === targetItem.id) return;
 
         const list = [...items.value];
-        const fromIndex = list.findIndex((i) => i.id === fromId);
-        const toIndex = list.findIndex((i) => i.id === targetItem.id);
+        const fromIndex = list.findIndex((item) => item.id === fromId);
+        const toIndex = list.findIndex((item) => item.id === targetItem.id);
         const [moved] = list.splice(fromIndex, 1);
         list.splice(toIndex, 0, moved);
         items.value = list;
@@ -42,7 +42,7 @@ export function useDragDrop(items, onReorder) {
         draggingId.value = null;
         dragOverId.value = null;
 
-        onReorder(list.map((i) => i.id));
+        onReorder(list.map((item) => item.id));
     }
 
     return { draggingId, dragOverId, onDragStart, onDragEnd, onDragOver, onDrop };
