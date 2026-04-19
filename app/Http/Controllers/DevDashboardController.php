@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatus;
+use App\Http\Requests\PaginationRequest;
 use App\Http\Requests\SendAppInvitationRequest;
 use App\Models\Note;
 use App\Models\User;
@@ -41,19 +42,17 @@ class DevDashboardController extends Controller
         ]);
     }
 
-    public function users(Request $request): Response
+    public function users(PaginationRequest $pagination): Response
     {
-        $search = $request->query('search', '');
-
         $users = User::with('roles')
-            ->when($search, fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $search))->orWhere('email', 'like', sprintf('%%%s%%', $search)))
+            ->when($pagination->search(), fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $pagination->search()))->orWhere('email', 'like', sprintf('%%%s%%', $pagination->search())))
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
         return Inertia::render('Dev/Dashboard', [
             'tab' => 'users',
             'users' => $users,
-            'search' => $search,
+            'search' => $pagination->search(),
         ]);
     }
 
