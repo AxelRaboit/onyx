@@ -49,7 +49,7 @@ Disponible en thème sombre et clair, entièrement responsive, Onyx est conçu p
 
 ### Connexion
 
-![Connexion](docs/screenshots/login.jpg)
+![Connexion](docs/screenshots/login.png)
 
 > Page de connexion en deux colonnes : présentation des fonctionnalités à gauche, formulaire à droite.
 
@@ -57,15 +57,23 @@ Disponible en thème sombre et clair, entièrement responsive, Onyx est conçu p
 
 ### Inscription
 
-![Inscription](docs/screenshots/registration.jpg)
+![Inscription](docs/screenshots/registration.png)
 
 > Formulaire d'inscription : nom, e-mail, mot de passe et confirmation.
 
 ---
 
+### Mot de passe oublié
+
+![Mot de passe oublié](docs/screenshots/forgot-password.png)
+
+> Formulaire de réinitialisation du mot de passe : saisissez votre e-mail pour recevoir un lien de réinitialisation.
+
+---
+
 ### Tableau de bord
 
-![Tableau de bord](docs/screenshots/dashboard.jpg)
+![Tableau de bord](docs/screenshots/dashboard.png)
 
 > Accueil personnalisé après connexion.
 
@@ -73,7 +81,7 @@ Disponible en thème sombre et clair, entièrement responsive, Onyx est conçu p
 
 ### Notes
 
-![Notes](docs/screenshots/note-empty.jpg)
+![Notes](docs/screenshots/note-empty.png)
 
 > Vue principale de l'espace notes : arborescence à droite, éditeur au centre, recherche et création rapide.
 
@@ -81,109 +89,10 @@ Disponible en thème sombre et clair, entièrement responsive, Onyx est conçu p
 
 ### Start here — liens wiki & callouts
 
-![Édition](docs/screenshots/markdown-example-1.jpg)
-![Aperçu](docs/screenshots/preview-example-1.jpg)
+![Édition](docs/screenshots/markdown-example-1.png)
+![Aperçu](docs/screenshots/preview-example-1.png)
 
 > Note d'index avec liens wiki `[[...]]` vers d'autres notes et callouts info/tip. En aperçu, les liens sont cliquables et les callouts colorés.
-
----
-
-### Projects — tableau & callout warning
-
-![Édition](docs/screenshots/markdown-example-2.jpg)
-![Aperçu](docs/screenshots/preview-example-2.jpg)
-
-> Tableau de suivi de projets avec liens wiki dans les cellules et callout warning. En aperçu, le tableau est mis en forme et les liens sont navigables.
-
----
-
-### Onyx Development — cases à cocher & blocs de code
-
-![Édition](docs/screenshots/markdown-example-3.jpg)
-![Aperçu](docs/screenshots/preview-example-3.jpg)
-
-> Liste de tâches avec cases à cocher, callout note et bloc de code. En aperçu, les cases sont interactives et le code est indenté.
-
----
-
-### Mobile App Idea — callouts multiples & liens wiki
-
-![Édition](docs/screenshots/markdown-example-4.jpg)
-![Aperçu](docs/screenshots/preview-example-4.jpg)
-
-> Note d'idées avec cases à cocher, callouts question/example et lien wiki vers une autre note. En aperçu, chaque callout a sa couleur distincte.
-
----
-
-### Learning — liste de liens wiki
-
-![Édition](docs/screenshots/markdown-example-5.jpg)
-![Aperçu](docs/screenshots/preview-example-5.jpg)
-
-> Note index de dossier avec liste de liens wiki et callout abstract. En aperçu, tous les liens sont navigables vers leurs notes respectives.
-
----
-
-### Vue 3 Notes — blocs de code JavaScript
-
-![Édition](docs/screenshots/markdown-example-6.jpg)
-![Aperçu](docs/screenshots/preview-example-6.jpg)
-
-> Note technique avec plusieurs blocs de code JavaScript. En aperçu, la coloration syntaxique est appliquée via highlight.js.
-
----
-
-### Laravel Tips — code PHP, tableau & callout danger
-
-![Édition](docs/screenshots/markdown-example-7.jpg)
-![Aperçu](docs/screenshots/preview-example-7.jpg)
-
-> Note de référence technique avec blocs de code PHP, callout danger et tableau Artisan. En aperçu, le PHP est coloré et le tableau est mis en forme.
-
----
-
-### Journal — note du jour & callout tip
-
-![Édition](docs/screenshots/markdown-example-8.jpg)
-![Aperçu](docs/screenshots/preview-example-8.jpg)
-
-> Dossier journal avec callout tip présentant la fonctionnalité "Note du jour". En aperçu, le callout est mis en valeur avec son icône.
-
----
-
-### 2026-04-13 — note quotidienne & callout success
-
-![Édition](docs/screenshots/markdown-example-9.jpg)
-![Aperçu](docs/screenshots/preview-example-9.jpg)
-
-> Note du jour avec tâches terminées/en cours, callout success et lien wiki vers un projet. En aperçu, les cases sont interactives et le callout vert est visible.
-
----
-
-### 2026-04-12 — note quotidienne & code avec callout info
-
-![Édition](docs/screenshots/markdown-example-10.jpg)
-![Aperçu](docs/screenshots/preview-example-10.jpg)
-
-> Note quotidienne avec liste de tâches, callout info et bloc de code JavaScript illustrant une extension marked.js. En aperçu, le code est mis en couleur.
-
----
-
-### Reference — cheat sheet callouts & raccourcis
-
-![Édition](docs/screenshots/markdown-example-11.jpg)
-![Aperçu](docs/screenshots/preview-example-11.jpg)
-
-> Note de référence avec tableaux listant tous les types de callouts disponibles et les raccourcis clavier. En aperçu, les tableaux sont alignés et lisibles.
-
----
-
-### Ideas — brainstorm avec callouts variés
-
-![Édition](docs/screenshots/markdown-example-12.jpg)
-![Aperçu](docs/screenshots/preview-example-12.jpg)
-
-> Note de brainstorm libre avec callouts example, question et bug, listes et liens wiki. En aperçu, chaque callout a sa couleur selon son type.
 
 ---
 
@@ -207,7 +116,7 @@ Disponible en thème sombre et clair, entièrement responsive, Onyx est conçu p
 
 ### Graphe de notes
 
-![Graphe](docs/screenshots/graphe.jpg)
+![Graphe](docs/screenshots/graphe.png)
 
 > Carte visuelle interactive de toutes les connexions entre vos notes via les liens wiki.
 
@@ -215,7 +124,10 @@ Disponible en thème sombre et clair, entièrement responsive, Onyx est conçu p
 
 ### Guide — Lexique
 
-![Guide — Lexique](docs/screenshots/guide-lexique.png)
+![Guide — Lexique 1](docs/screenshots/guide-lexique-1.png)
+![Guide — Lexique 2](docs/screenshots/guide-lexique-2.png)
+![Guide — Lexique 3](docs/screenshots/guide-lexique-3.png)
+![Guide — Lexique 4](docs/screenshots/guide-lexique-4.png)
 
 > Référence complète de la syntaxe Markdown supportée par Onyx, avec exemples côte à côte.
 
@@ -239,7 +151,7 @@ Disponible en thème sombre et clair, entièrement responsive, Onyx est conçu p
 
 ### Administration
 
-![Administration](docs/screenshots/administration.jpg)
+![Administration](docs/screenshots/administration.png)
 
 > Dashboard admin : statistiques globales (utilisateurs, notes), gestion des utilisateurs, invitations et paramètres.
 

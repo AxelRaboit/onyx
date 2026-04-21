@@ -14,7 +14,21 @@ import TextInput from '@/components/form/TextInput.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { Activity, Check, LogIn, Mail, NotebookText, Pencil, Shield, Trash2, UserRound, Users, X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { Bar, Line } from 'vue-chartjs';
+import {
+    BarElement,
+    CategoryScale,
+    Chart as ChartJS,
+    Filler,
+    Legend,
+    LinearScale,
+    LineElement,
+    PointElement,
+    Tooltip,
+} from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Legend, Filler);
 
 const { t } = useI18n();
 
@@ -136,6 +150,41 @@ const saveParameter = async (param) => {
     }
 };
 
+// ── Charts ───────────────────────────────────────────────────────────────────
+
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280', font: { size: 11 } } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280', font: { size: 11 }, precision: 0 }, beginAtZero: true },
+    },
+};
+
+const usersChartData = computed(() => ({
+    labels: props.stats?.charts?.labels ?? [],
+    datasets: [{
+        data: props.stats?.charts?.usersPerMonth ?? [],
+        borderColor: '#6366f1',
+        backgroundColor: 'rgba(99,102,241,0.12)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: '#6366f1',
+    }],
+}));
+
+const notesChartData = computed(() => ({
+    labels: props.stats?.charts?.labels ?? [],
+    datasets: [{
+        data: props.stats?.charts?.notesPerMonth ?? [],
+        backgroundColor: 'rgba(99,102,241,0.7)',
+        borderRadius: 5,
+        borderSkipped: false,
+    }],
+}));
+
 // ── Invitations tab ──────────────────────────────────────────────────────────
 
 const invitationForm = useForm({
@@ -157,7 +206,12 @@ const submitInvitation = () => {
 
     <AuthenticatedLayout>
         <template #header>
-            <AppPageHeader :title="t('admin.title')" />
+            <AppPageHeader
+                :crumbs="[
+                    { label: t('admin.title'), href: route('dev.dashboard.stats') },
+                    { label: tab === 'stats' ? t('admin.stats.title') : tab === 'users' ? t('admin.users.title') : tab === 'invitations' ? t('admin.invitations.title') : t('admin.parameters.title') },
+                ]"
+            />
         </template>
 
         <div class="space-y-6">
@@ -204,30 +258,56 @@ const submitInvitation = () => {
             </div>
 
             <!-- Stats tab -->
-            <div v-if="tab === 'stats' && stats" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="bg-surface border border-line rounded-xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ t('admin.stats.usersTotal') }}</span>
-                        <div class="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
-                            <Users class="w-4 h-4 text-indigo-400" />
+            <div v-if="tab === 'stats' && stats" class="space-y-6">
+                <!-- Stat cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-surface border border-line rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ t('admin.stats.usersTotal') }}</span>
+                            <div class="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
+                                <Users class="w-4 h-4 text-indigo-400" />
+                            </div>
                         </div>
+                        <p class="text-2xl font-bold text-indigo-400">{{ stats.users.total }}</p>
+                        <p class="text-xs text-secondary mt-1.5">
+                            <span class="text-indigo-400 font-medium">+{{ stats.users.newThisMonth }}</span>
+                            {{ ' ' + t('admin.stats.usersNewThisMonth').toLowerCase() }}
+                        </p>
                     </div>
-                    <p class="text-2xl font-bold text-indigo-400">{{ stats.users.total }}</p>
-                    <p class="text-xs text-secondary mt-1.5">
-                        <span class="text-indigo-400 font-medium">+{{ stats.users.newThisMonth }}</span>
-                        {{ ' ' + t('admin.stats.usersNewThisMonth').toLowerCase() }}
-                    </p>
+
+                    <div class="bg-surface border border-line rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ t('admin.stats.notesTotal') }}</span>
+                            <div class="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
+                                <NotebookText class="w-4 h-4 text-indigo-400" />
+                            </div>
+                        </div>
+                        <p class="text-2xl font-bold text-indigo-400">{{ stats.notes }}</p>
+                        <p class="text-xs text-secondary mt-1.5">{{ t('admin.stats.notes') }}</p>
+                    </div>
                 </div>
 
-                <div class="bg-surface border border-line rounded-xl p-5">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-medium text-secondary uppercase tracking-wide">{{ t('admin.stats.notesTotal') }}</span>
-                        <div class="w-8 h-8 rounded-lg bg-indigo-600/10 flex items-center justify-center">
-                            <NotebookText class="w-4 h-4 text-indigo-400" />
+                <!-- Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="bg-surface border border-line rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-4">
+                            <Users class="w-4 h-4 text-indigo-400" />
+                            <span class="text-sm font-medium text-primary">{{ t('admin.stats.usersPerMonth') }}</span>
+                        </div>
+                        <div class="h-48">
+                            <Line :data="usersChartData" :options="chartOptions" />
                         </div>
                     </div>
-                    <p class="text-2xl font-bold text-indigo-400">{{ stats.notes }}</p>
-                    <p class="text-xs text-secondary mt-1.5">{{ t('admin.stats.notes') }}</p>
+
+                    <div class="bg-surface border border-line rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-4">
+                            <NotebookText class="w-4 h-4 text-indigo-400" />
+                            <span class="text-sm font-medium text-primary">{{ t('admin.stats.notesPerMonth') }}</span>
+                        </div>
+                        <div class="h-48">
+                            <Bar :data="notesChartData" :options="chartOptions" />
+                        </div>
+                    </div>
                 </div>
             </div>
 

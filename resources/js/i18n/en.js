@@ -264,12 +264,14 @@ export default {
     admin: {
         title: 'Administration',
         stats: {
-            title: 'Stats',
+            title: 'Overview',
             usersTotal: 'Total users',
             users: 'Users',
             usersNewThisMonth: 'New this month',
+            usersPerMonth: 'New users per month',
             notes: 'Notes',
             notesTotal: 'Total notes',
+            notesPerMonth: 'Notes created per month',
         },
         users: {
             title: 'Users',
