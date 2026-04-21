@@ -9,10 +9,10 @@ use App\Http\Requests\Admin\AdminStoreUserRequest;
 use App\Http\Requests\Admin\AdminUpdateUserRequest;
 use App\Http\Requests\PaginationRequest;
 use App\Http\Requests\SendAppInvitationRequest;
-use App\Models\Note;
 use App\Models\User;
 use App\Services\AppInvitationService;
 use App\Services\ApplicationParameterService;
+use App\Services\DevDashboardService;
 use App\Services\ImpersonationService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
@@ -26,38 +26,24 @@ class DevDashboardController extends Controller
     public function __construct(
         private readonly AppInvitationService $invitationService,
         private readonly ApplicationParameterService $applicationParameterService,
+        private readonly DevDashboardService $dashboardService,
         private readonly ImpersonationService $impersonationService,
         private readonly UserService $userService,
     ) {}
 
     public function stats(): Response
     {
-        $now = now();
-
         return Inertia::render('Dev/Dashboard', [
             'tab' => 'stats',
-            'stats' => [
-                'users' => [
-                    'total' => User::count(),
-                    'newThisMonth' => User::whereYear('created_at', $now->year)
-                        ->whereMonth('created_at', $now->month)
-                        ->count(),
-                ],
-                'notes' => Note::count(),
-            ],
+            'stats' => $this->dashboardService->getStats(),
         ]);
     }
 
     public function users(PaginationRequest $pagination): Response
     {
-        $users = User::with('roles')
-            ->when($pagination->search(), fn ($query) => $query->where('name', 'like', sprintf('%%%s%%', $pagination->search()))->orWhere('email', 'like', sprintf('%%%s%%', $pagination->search())))
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
-
         return Inertia::render('Dev/Dashboard', [
             'tab' => 'users',
-            'users' => $users,
+            'users' => $this->userService->paginateForAdmin($pagination->search()),
             'search' => $pagination->search(),
         ]);
     }
@@ -78,13 +64,7 @@ class DevDashboardController extends Controller
 
     public function toggleRole(User $user): RedirectResponse
     {
-        if ($user->hasRole('ROLE_DEV')) {
-            $user->removeRole('ROLE_DEV');
-            $user->assignRole('ROLE_USER');
-        } else {
-            $user->removeRole('ROLE_USER');
-            $user->assignRole('ROLE_DEV');
-        }
+        $this->userService->toggleRole($user);
 
         return back();
     }
@@ -110,7 +90,7 @@ class DevDashboardController extends Controller
     {
         abort_if($user->id === auth()->id(), HttpStatus::Forbidden->value, 'Cannot delete your own account.');
 
-        $user->delete();
+        $this->userService->deleteForAdmin($user);
 
         return back();
     }

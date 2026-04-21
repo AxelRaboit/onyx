@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Enums\Role;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
@@ -17,7 +18,7 @@ class CheckRole
         }
 
         $user = auth()->user();
-        $implied = $roleName === 'ROLE_USER' && $user->hasRole('ROLE_DEV');
+        $implied = $roleName === Role::User->value && $user->hasRole(Role::Dev->value);
 
         if (! $implied && ! $user->hasRole($roleName)) {
             abort(HttpResponse::HTTP_FORBIDDEN, 'Unauthorized - insufficient role');
