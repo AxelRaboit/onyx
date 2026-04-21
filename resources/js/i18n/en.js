@@ -286,6 +286,16 @@ export default {
             confirmToggle: 'Toggle ROLE_DEV for {name}?',
             confirmDelete: 'Permanently delete {name}? This cannot be undone.',
             empty: 'No users found.',
+            create: 'Create user',
+            editUser: 'Edit user',
+            password: 'Password',
+            passwordPlaceholder: 'Leave blank to keep unchanged',
+            locale: 'Language',
+            save: 'Save',
+            saving: 'Saving…',
+            creating: 'Creating…',
+            impersonate: 'Impersonate {name}',
+            confirmImpersonate: 'You will be logged in as {name}. You can return to your account at any time.',
         },
         invitations: {
             title: 'Invitations',
@@ -308,5 +318,10 @@ export default {
             description: 'Description',
             empty: 'No parameters configured.',
         },
+    },
+
+    impersonation: {
+        banner: 'You are logged in as {name}',
+        leave: 'Return to my account',
     },
 };

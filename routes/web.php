@@ -44,7 +44,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'role:ROLE_DEV'])->group(function () {
     Route::get('/dev/dashboard', [DevDashboardController::class, 'stats'])->name('dev.dashboard.stats');
     Route::get('/dev/dashboard/users', [DevDashboardController::class, 'users'])->name('dev.dashboard.users');
+    Route::post('/dev/dashboard/users', [DevDashboardController::class, 'storeUser'])->name('dev.dashboard.users.store');
+    Route::patch('/dev/dashboard/users/{user}', [DevDashboardController::class, 'updateUser'])->name('dev.dashboard.users.update');
     Route::post('/dev/dashboard/users/{user}/toggle-role', [DevDashboardController::class, 'toggleRole'])->name('dev.dashboard.users.toggle-role');
+    Route::post('/dev/dashboard/users/{user}/impersonate', [DevDashboardController::class, 'impersonate'])->name('dev.dashboard.users.impersonate');
     Route::delete('/dev/dashboard/users/{user}', [DevDashboardController::class, 'destroyUser'])->name('dev.dashboard.users.destroy');
     Route::get('/dev/dashboard/invitations', [DevDashboardController::class, 'invitations'])->name('dev.dashboard.invitations');
     Route::post('/dev/dashboard/invitations', [DevDashboardController::class, 'sendInvitation'])->name('dev.dashboard.invitations.send');
@@ -53,6 +56,7 @@ Route::middleware(['auth', 'role:ROLE_DEV'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::post('/dev/impersonation/leave', [DevDashboardController::class, 'leaveImpersonation'])->name('dev.impersonation.leave');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

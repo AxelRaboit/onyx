@@ -5,8 +5,14 @@ import AppPageHeader from '@/components/ui/AppPageHeader.vue';
 import AppPagination from '@/components/ui/AppPagination.vue';
 import ConfirmModal from '@/components/ui/ConfirmModal.vue';
 import EmptyState from '@/components/ui/EmptyState.vue';
+import Modal from '@/components/ui/Modal.vue';
+import AppButton from '@/components/ui/AppButton.vue';
+import AppTooltip from '@/components/ui/AppTooltip.vue';
+import InputError from '@/components/form/InputError.vue';
+import InputLabel from '@/components/form/InputLabel.vue';
+import TextInput from '@/components/form/TextInput.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import { Activity, Check, Mail, NotebookText, Pencil, Shield, Trash2, UserRound, Users, X } from 'lucide-vue-next';
+import { Activity, Check, LogIn, Mail, NotebookText, Pencil, Shield, Trash2, UserRound, Users, X } from 'lucide-vue-next';
 import { useI18n } from 'vue-i18n';
 import { onMounted, ref } from 'vue';
 
@@ -34,6 +40,49 @@ onMounted(() => {
 const searchInput = ref(props.search);
 const performSearch = () => {
     router.get(route('dev.dashboard.users'), { search: searchInput.value });
+};
+
+// ── User create/edit modal ────────────────────────────────────────────────────
+
+const userModalOpen = ref(false);
+const editingUser = ref(null);
+
+const userForm = useForm({ name: '', email: '', password: '', locale: 'fr' });
+
+const openCreateModal = () => {
+    editingUser.value = null;
+    userForm.reset();
+    userForm.locale = 'fr';
+    userModalOpen.value = true;
+};
+
+const openEditModal = (user) => {
+    editingUser.value = user;
+    userForm.name = user.name;
+    userForm.email = user.email;
+    userForm.password = '';
+    userForm.locale = user.locale ?? 'fr';
+    userModalOpen.value = true;
+};
+
+const closeUserModal = () => {
+    userModalOpen.value = false;
+    editingUser.value = null;
+};
+
+const submitUserForm = () => {
+    if (editingUser.value) {
+        userForm.patch(route('dev.dashboard.users.update', editingUser.value.id), { onSuccess: closeUserModal });
+    } else {
+        userForm.post(route('dev.dashboard.users.store'), { onSuccess: closeUserModal });
+    }
+};
+
+const pendingImpersonateUser = ref(null);
+const doImpersonate = () => {
+    if (!pendingImpersonateUser.value) return;
+    useForm({}).post(route('dev.dashboard.users.impersonate', pendingImpersonateUser.value.id));
+    pendingImpersonateUser.value = null;
 };
 
 const pendingToggleUser = ref(null);
@@ -118,7 +167,7 @@ const submitInvitation = () => {
                     <Link
                         :href="route('dev.dashboard.stats')"
                         :aria-current="tab === 'stats' ? 'page' : undefined"
-                        class="py-3 px-1 border-b-2 transition-colors text-sm font-medium flex items-center gap-1.5"
+                        class="py-3 px-1 border-b-2 transition-colors text-sm sm:text-base font-medium flex items-center gap-1.5"
                         :class="tab === 'stats' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
                     >
                         <Activity class="w-3.5 h-3.5" :stroke-width="2" />
@@ -127,7 +176,7 @@ const submitInvitation = () => {
                     <Link
                         :href="route('dev.dashboard.users')"
                         :aria-current="tab === 'users' ? 'page' : undefined"
-                        class="py-3 px-1 border-b-2 transition-colors text-sm font-medium flex items-center gap-1.5"
+                        class="py-3 px-1 border-b-2 transition-colors text-sm sm:text-base font-medium flex items-center gap-1.5"
                         :class="tab === 'users' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
                     >
                         <Users class="w-3.5 h-3.5" :stroke-width="2" />
@@ -136,7 +185,7 @@ const submitInvitation = () => {
                     <Link
                         :href="route('dev.dashboard.invitations')"
                         :aria-current="tab === 'invitations' ? 'page' : undefined"
-                        class="py-3 px-1 border-b-2 transition-colors text-sm font-medium flex items-center gap-1.5"
+                        class="py-3 px-1 border-b-2 transition-colors text-sm sm:text-base font-medium flex items-center gap-1.5"
                         :class="tab === 'invitations' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
                     >
                         <Mail class="w-3.5 h-3.5" :stroke-width="2" />
@@ -145,7 +194,7 @@ const submitInvitation = () => {
                     <Link
                         :href="route('dev.dashboard.parameters')"
                         :aria-current="tab === 'parameters' ? 'page' : undefined"
-                        class="py-3 px-1 border-b-2 transition-colors text-sm font-medium flex items-center gap-1.5"
+                        class="py-3 px-1 border-b-2 transition-colors text-sm sm:text-base font-medium flex items-center gap-1.5"
                         :class="tab === 'parameters' ? 'border-indigo-500 text-primary' : 'border-transparent text-secondary hover:text-primary'"
                     >
                         <Shield class="w-3.5 h-3.5" :stroke-width="2" />
@@ -193,11 +242,15 @@ const submitInvitation = () => {
                         v-on:keyup.enter="performSearch"
                     >
                     <button
-                        class="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-sm font-medium"
+                        class="w-full sm:w-auto px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
                         v-on:click="performSearch"
                     >
                         {{ t('admin.users.search') }}
                     </button>
+                    <AppButton v-on:click="openCreateModal">
+                        <X class="w-4 h-4 rotate-45 mr-1.5" />
+                        {{ t('admin.users.create') }}
+                    </AppButton>
                 </div>
 
                 <EmptyState v-if="users && users.data.length === 0" icon="search" :message="t('admin.users.empty')" />
@@ -218,6 +271,12 @@ const submitInvitation = () => {
                             <div class="flex items-center justify-between pt-1 border-t border-line">
                                 <p class="text-xs text-muted">{{ new Date(user.created_at).toLocaleDateString() }}</p>
                                 <div class="flex items-center gap-1">
+                                    <button class="p-1.5 rounded text-muted hover:text-indigo-400 transition-colors" v-on:click="openEditModal(user)">
+                                        <Pencil class="w-4 h-4" />
+                                    </button>
+                                    <button class="p-1.5 rounded text-muted hover:text-amber-400 transition-colors" v-on:click="pendingImpersonateUser = user">
+                                        <LogIn class="w-4 h-4" />
+                                    </button>
                                     <button
                                         class="p-1.5 rounded text-muted transition-colors"
                                         :class="user.roles?.some((role) => role.name === 'ROLE_DEV') ? 'hover:text-indigo-400' : 'hover:text-rose-400'"
@@ -259,6 +318,20 @@ const submitInvitation = () => {
                                     <td class="px-4 py-3 text-sm text-secondary hidden lg:table-cell">{{ new Date(user.created_at).toLocaleDateString() }}</td>
                                     <td class="px-4 py-3 text-right">
                                         <div class="flex items-center justify-end gap-1">
+                                            <button
+                                                class="p-1.5 rounded text-muted hover:text-indigo-400 transition-colors"
+                                                v-on:click="openEditModal(user)"
+                                            >
+                                                <Pencil class="w-4 h-4" />
+                                            </button>
+                                            <AppTooltip :text="t('admin.users.impersonate', { name: user.name })">
+                                                <button
+                                                    class="p-1.5 rounded text-muted hover:text-amber-400 transition-colors"
+                                                    v-on:click="pendingImpersonateUser = user"
+                                                >
+                                                    <LogIn class="w-4 h-4" />
+                                                </button>
+                                            </AppTooltip>
                                             <button
                                                 class="p-1.5 rounded text-muted transition-colors"
                                                 :class="user.roles?.some((role) => role.name === 'ROLE_DEV') ? 'hover:text-indigo-400' : 'hover:text-rose-400'"
@@ -448,6 +521,74 @@ const submitInvitation = () => {
             </div>
         </div>
     </AuthenticatedLayout>
+
+    <Modal :show="userModalOpen" max-width="lg" v-on:close="closeUserModal">
+        <div class="bg-surface p-6 space-y-5">
+            <h2 class="text-base font-semibold text-primary">
+                {{ editingUser ? t('admin.users.editUser') : t('admin.users.create') }}
+            </h2>
+
+            <form class="space-y-4" v-on:submit.prevent="submitUserForm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <InputLabel :value="t('admin.users.name')" required />
+                        <TextInput v-model="userForm.name" type="text" required />
+                        <InputError :message="userForm.errors.name" />
+                    </div>
+                    <div>
+                        <InputLabel :value="t('admin.users.email')" required />
+                        <TextInput v-model="userForm.email" type="email" required />
+                        <InputError :message="userForm.errors.email" />
+                    </div>
+                </div>
+
+                <div>
+                    <InputLabel :value="t('admin.users.password')" :required="!editingUser" />
+                    <TextInput
+                        v-model="userForm.password"
+                        type="password"
+                        :required="!editingUser"
+                        :placeholder="editingUser ? t('admin.users.passwordPlaceholder') : ''"
+                    />
+                    <InputError :message="userForm.errors.password" />
+                </div>
+
+                <div>
+                    <InputLabel :value="t('admin.users.locale')" />
+                    <select
+                        v-model="userForm.locale"
+                        class="w-full bg-surface-2 text-primary rounded-lg px-3 py-2.5 border border-line focus:border-indigo-500 focus:outline-none"
+                    >
+                        <option value="fr">Français</option>
+                        <option value="en">English</option>
+                        <option value="de">Deutsch</option>
+                        <option value="es">Español</option>
+                    </select>
+                    <InputError :message="userForm.errors.locale" />
+                </div>
+
+                <div class="flex justify-end gap-3 pt-2">
+                    <AppButton type="button" variant="secondary" v-on:click="closeUserModal">
+                        {{ t('common.cancel') }}
+                    </AppButton>
+                    <AppButton type="submit" :disabled="userForm.processing">
+                        {{ userForm.processing
+                            ? (editingUser ? t('admin.users.saving') : t('admin.users.creating'))
+                            : (editingUser ? t('admin.users.save') : t('common.create')) }}
+                    </AppButton>
+                </div>
+            </form>
+        </div>
+    </Modal>
+
+    <ConfirmModal
+        :show="!!pendingImpersonateUser"
+        :message="pendingImpersonateUser ? t('admin.users.confirmImpersonate', { name: pendingImpersonateUser.name }) : ''"
+        :confirm-label="pendingImpersonateUser ? t('admin.users.impersonate', { name: pendingImpersonateUser.name }) : ''"
+        confirm-variant="indigo"
+        v-on:confirm="doImpersonate"
+        v-on:cancel="pendingImpersonateUser = null"
+    />
 
     <ConfirmModal
         :show="!!pendingToggleUser"

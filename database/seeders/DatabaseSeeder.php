@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
         $bob->syncRoles([$roleUser]);
 
         // Unverified user
-        User::firstOrCreate(
+        $charlie = User::firstOrCreate(
             ['email' => 'charlie@example.com'],
             [
                 'name'              => 'Charlie',
@@ -64,6 +64,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => null,
             ]
         );
+        $charlie->syncRoles([$roleUser]);
 
         // ── Notes for axel ────────────────────────────────────────────────────
         $this->seedAxelNotes($axel);
