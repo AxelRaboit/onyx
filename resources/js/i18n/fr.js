@@ -287,6 +287,17 @@ export default {
             confirmToggle: 'Modifier le rôle de {name} ?',
             confirmDelete: 'Supprimer définitivement {name} ? Cette action est irréversible.',
             empty: 'Aucun utilisateur trouvé.',
+            create: 'Créer un utilisateur',
+            editUser: "Modifier l'utilisateur",
+            password: 'Mot de passe',
+            passwordPlaceholder: 'Laisser vide pour ne pas modifier',
+            locale: 'Langue',
+            save: 'Enregistrer',
+            saving: 'Enregistrement…',
+            creating: 'Création…',
+            impersonate: 'Impersonner {name}',
+            confirmImpersonate:
+                'Vous allez vous connecter en tant que {name}. Vous pourrez revenir à votre compte à tout moment.',
         },
         invitations: {
             title: 'Invitations',
@@ -310,5 +321,10 @@ export default {
             description: 'Description',
             empty: 'Aucun paramètre configuré.',
         },
+    },
+
+    impersonation: {
+        banner: 'Vous êtes connecté en tant que {name}',
+        leave: 'Revenir à mon compte',
     },
 };

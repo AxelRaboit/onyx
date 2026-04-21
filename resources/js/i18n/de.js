@@ -290,6 +290,16 @@ export default {
             confirmToggle: 'Rolle von {name} ändern?',
             confirmDelete: '{name} dauerhaft löschen? Diese Aktion ist unwiderruflich.',
             empty: 'Keine Benutzer gefunden.',
+            create: 'Benutzer erstellen',
+            editUser: 'Benutzer bearbeiten',
+            password: 'Passwort',
+            passwordPlaceholder: 'Leer lassen, um das Passwort nicht zu ändern',
+            locale: 'Sprache',
+            save: 'Speichern',
+            saving: 'Speichern…',
+            creating: 'Erstellen…',
+            impersonate: '{name} imitieren',
+            confirmImpersonate: 'Sie werden als {name} eingeloggt. Sie können jederzeit zu Ihrem Konto zurückkehren.',
         },
         invitations: {
             title: 'Einladungen',
@@ -313,5 +323,10 @@ export default {
             description: 'Beschreibung',
             empty: 'Keine Parameter konfiguriert.',
         },
+    },
+
+    impersonation: {
+        banner: 'Sie sind eingeloggt als {name}',
+        leave: 'Zurück zu meinem Konto',
     },
 };

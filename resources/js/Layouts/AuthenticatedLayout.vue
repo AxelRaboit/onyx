@@ -1,8 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import AppLogo from '@/components/ui/AppLogo.vue';
 import { useTheme } from '@/composables/ui/useTheme';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, useForm, usePage } from '@inertiajs/vue3';
 import { useI18n } from 'vue-i18n';
 import {
     LayoutDashboard,
@@ -18,12 +18,21 @@ import {
     ChevronsLeft,
     ChevronsRight,
     Mail,
+    UserCheck,
 } from 'lucide-vue-next';
 
-const { t } = useI18n();
+const { t, locale: i18nLocale } = useI18n();
 const showMobileMenu = ref(false);
 const { theme, toggle: toggleTheme } = useTheme();
 const page = usePage();
+
+watch(() => page.props.locale, (newLocale) => {
+    if (newLocale) i18nLocale.value = newLocale;
+}, { immediate: true });
+
+function leaveImpersonation() {
+    useForm({}).post(route('dev.impersonation.leave'));
+}
 
 // ── Sidebar collapsed state (persisted) ──────────────────────────────────
 const collapsed = ref(localStorage.getItem('sidebar-collapsed') === 'true');
@@ -68,6 +77,15 @@ const devNavItem = computed(() => {
 
 <template>
     <div class="min-h-screen bg-bg">
+        <!-- Impersonation banner -->
+        <div v-if="$page.props.impersonating" class="bg-amber-500/15 border-b border-amber-500/40 px-4 py-2 flex items-center justify-center gap-3 text-xs text-amber-300">
+            <UserCheck class="w-4 h-4 shrink-0" />
+            <span>{{ t('impersonation.banner', { name: $page.props.auth.user.name }) }}</span>
+            <button class="ml-2 underline hover:text-amber-200 transition-colors font-medium" v-on:click="leaveImpersonation">
+                {{ t('impersonation.leave') }}
+            </button>
+        </div>
+
         <!-- Desktop sidebar -->
         <aside
             class="hidden lg:flex flex-col fixed inset-y-0 left-0 bg-surface border-r border-line z-30 transition-all duration-200"

@@ -291,6 +291,16 @@ export default {
             confirmToggle: '¿Cambiar rol de {name}?',
             confirmDelete: '¿Eliminar permanentemente a {name}? Esta acción es irreversible.',
             empty: 'No se encontraron usuarios.',
+            create: 'Crear usuario',
+            editUser: 'Editar usuario',
+            password: 'Contraseña',
+            passwordPlaceholder: 'Dejar en blanco para no modificar',
+            locale: 'Idioma',
+            save: 'Guardar',
+            saving: 'Guardando…',
+            creating: 'Creando…',
+            impersonate: 'Suplantar a {name}',
+            confirmImpersonate: 'Iniciará sesión como {name}. Puede volver a su cuenta en cualquier momento.',
         },
         invitations: {
             title: 'Invitaciones',
@@ -314,5 +324,10 @@ export default {
             description: 'Descripción',
             empty: 'No hay parámetros configurados.',
         },
+    },
+
+    impersonation: {
+        banner: 'Has iniciado sesión como {name}',
+        leave: 'Volver a mi cuenta',
     },
 };
