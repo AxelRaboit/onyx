@@ -55,7 +55,7 @@ class SeedDemoUserCommand extends Command
 
         $this->line('  Creating demo user...');
         $user = User::create([
-            'name' => 'Demo User',
+            'name' => 'Demo',
             'email' => $email,
             'password' => Hash::make($password),
             'email_verified_at' => now(),
