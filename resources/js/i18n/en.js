@@ -36,6 +36,13 @@ export default {
             forgot: 'Forgot your password?',
             submit: 'Log in',
             noAccount: "Don't have an account? Sign up",
+            tryDemo: 'Try the demo',
+            demoModal: {
+                title: 'Demo access',
+                description: 'Enter the password to access the demo.',
+                password: 'Password',
+                submit: 'Access',
+            },
         },
         register: {
             title: 'Register',

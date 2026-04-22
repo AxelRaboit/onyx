@@ -36,6 +36,13 @@ export default {
             forgot: 'Mot de passe oublié ?',
             submit: 'Se connecter',
             noAccount: "Pas encore de compte ? S'inscrire",
+            tryDemo: 'Essayer la démo',
+            demoModal: {
+                title: 'Accès démo',
+                description: 'Entrez le mot de passe pour accéder à la démo.',
+                password: 'Mot de passe',
+                submit: 'Accéder',
+            },
         },
         register: {
             title: 'Inscription',

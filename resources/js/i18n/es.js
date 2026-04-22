@@ -36,6 +36,13 @@ export default {
             forgot: '¿Olvidaste tu contraseña?',
             submit: 'Iniciar sesión',
             noAccount: '¿No tienes cuenta? Regístrate',
+            tryDemo: 'Probar la demo',
+            demoModal: {
+                title: 'Acceso demo',
+                description: 'Introduce la contraseña para acceder a la demo.',
+                password: 'Contraseña',
+                submit: 'Acceder',
+            },
         },
         register: {
             title: 'Registrarse',
