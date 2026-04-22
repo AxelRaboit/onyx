@@ -256,9 +256,11 @@ make fix               # auto-correction (Rector, Pint, ESLint) + PHPStan
 make stan              # PHPStan seul
 
 # Tests
-make test              # suite complète
-make test-unit         # tests unitaires uniquement
-make test-feature      # tests de fonctionnalité uniquement
+make test-backend            # tous les tests backend (PHPUnit)
+make test-backend-unit       # tests unitaires backend uniquement
+make test-backend-feature    # tests de fonctionnalité backend uniquement
+make test-frontend           # tests frontend (Vitest)
+make ft                      # fix + tous les tests
 
 # Utilisateurs
 make role-dev EMAIL=user@example.com   # passer un utilisateur en ROLE_DEV
