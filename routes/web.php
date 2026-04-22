@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DemoController;
 use App\Http\Controllers\DevDashboardController;
 use App\Http\Controllers\DevPasswordController;
 use App\Http\Controllers\LocaleController;
@@ -11,6 +12,8 @@ use App\Http\Controllers\NoteImageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/demo/login', [DemoController::class, 'login'])->name('demo.login')->middleware(['guest', 'throttle:10,1']);
 
 Route::controller(DevPasswordController::class)->prefix('dev-access')->name('dev.password.')->group(function () {
     Route::get('/', 'show')->name('show');
