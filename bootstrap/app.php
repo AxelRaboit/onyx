@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -26,6 +28,20 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => CheckRole::class,
         ]);
+
+        $middleware->redirectTo(
+            guests: fn () => route('login'),
+            users: fn () => route('dashboard'),
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Unauthenticated users hitting an unknown URL are redirected to login
+        // instead of seeing a 404 page.
+        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+            if (null === $request->user()) {
+                return redirect()->route('login');
+            }
+
+            return null;
+        });
     })->create();
