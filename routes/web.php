@@ -44,6 +44,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/notes/images/{filename}', [NoteImageController::class, 'serve'])->name('notes.images.serve');
 });
 
+Route::permanentRedirect('/dev', '/dev/dashboard');
+
 Route::middleware(['auth', 'role:ROLE_DEV'])->group(function () {
     Route::get('/dev/dashboard', [DevDashboardController::class, 'stats'])->name('dev.dashboard.stats');
     Route::get('/dev/dashboard/users', [DevDashboardController::class, 'users'])->name('dev.dashboard.users');
