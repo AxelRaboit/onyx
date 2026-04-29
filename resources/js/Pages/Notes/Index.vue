@@ -313,6 +313,11 @@ const {
 const editTags    = ref([]);
 const tagInput    = ref('');
 const isPreview   = usePreference('onyx:preview-mode', false);
+
+async function handleCreateNote(parentId = null) {
+    await createNote(parentId);
+    isPreview.value = false;
+}
 const showOutline    = ref(false);
 const showGraph      = ref(false);
 const showTemplates  = ref(false);
@@ -485,7 +490,7 @@ async function confirmDelete() {
                     <p class="text-sm text-muted">{{ t('notepad.selectHint') }}</p>
                     <button
                         class="text-xs px-3 py-1.5 rounded-lg bg-indigo-600/15 text-indigo-400 hover:bg-indigo-600/25 transition-colors"
-                        v-on:click="createNote(null)"
+                        v-on:click="handleCreateNote(null)"
                     >
                         {{ t('notepad.newNote') }}
                     </button>
@@ -816,7 +821,7 @@ async function confirmDelete() {
                         <button
                             class="flex items-center justify-center w-6 h-6 rounded-md hover:bg-indigo-600/15 hover:text-indigo-400 text-muted transition-colors"
                             :title="t('notepad.newNote')"
-                            v-on:click="createNote(null)"
+                            v-on:click="handleCreateNote(null)"
                         >
                             <Plus class="w-3.5 h-3.5" />
                         </button>
@@ -842,7 +847,7 @@ async function confirmDelete() {
                         :nodes="tree"
                         :selected-id="selectedNoteId"
                         v-on:select="selectNote($event)"
-                        v-on:create="createNote($event)"
+                        v-on:create="handleCreateNote($event)"
                         v-on:delete="confirmDeleteId = $event"
                     />
 
@@ -853,7 +858,7 @@ async function confirmDelete() {
 
                     <!-- Root drop zone: empty space below the tree moves note to root -->
                     <div
-                        class="flex-1 min-h-[2rem] rounded-md transition-colors"
+                        class="flex-1 min-h-8 rounded-md transition-colors"
                         :class="draggingId && dragOverId === null ? 'bg-indigo-600/10 ring-1 ring-inset ring-indigo-500/40' : ''"
                         v-on:dragover.prevent="onDragOver(null)"
                         v-on:drop.prevent="onDrop(null)"

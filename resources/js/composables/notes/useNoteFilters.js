@@ -1,4 +1,4 @@
-import { reactive, onScopeDispose } from 'vue';
+import { reactive, onScopeDispose, getCurrentScope } from 'vue';
 import { router } from '@inertiajs/vue3';
 
 export function useNoteFilters(initialFilters) {
@@ -37,7 +37,7 @@ export function useNoteFilters(initialFilters) {
         return Object.values(filters).some((v) => v !== '');
     }
 
-    onScopeDispose(() => clearTimeout(timeout));
+    if (getCurrentScope()) onScopeDispose(() => clearTimeout(timeout));
 
     return { filters, search, filterByTag, reset, hasFilters };
 }
