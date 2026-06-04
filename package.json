@@ -17,7 +17,7 @@
         "@tailwindcss/typography": "0.5.19",
         "@tailwindcss/vite": "^4.2.4",
         "@vitejs/plugin-vue": "^6.0.6",
-        "@vue/test-utils": "^2.4.9",
+        "@vue/test-utils": "^2.4.11",
         "alpinejs": "^3.4.2",
         "axios": ">=1.11.0 <=1.16.0",
         "concurrently": "^9.0.1",
