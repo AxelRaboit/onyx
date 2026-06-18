@@ -35,7 +35,7 @@ jobs:
     steps:
       # —— Setup GitHub actions 🐙 ———————————————————————————————————————————————————
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # —— PHP & Composer 🧙‍️ —————————————————————————————————————————————————————————
       - name: Setup PHP, extensions & composer with shivammathur/setup-php
