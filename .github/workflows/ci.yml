@@ -59,7 +59,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache PHP dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -103,7 +103,7 @@ jobs:
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         name: Setup pnpm cache
         with:
           path: ${{ env.STORE_PATH }}
@@ -125,7 +125,7 @@ jobs:
         run: mkdir -p ./storage/app/{rector,phpstan}
 
       - name: Rector Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ./storage/app/rector
           key: ${{ runner.os }}-rector-${{ hashFiles('**/composer.lock') }}
@@ -139,7 +139,7 @@ jobs:
 
       # —— Static analysis ✨ —————————————————————————————————————————————————
       - name: PHPStan Cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ./storage/app/phpstan
           key: phpstan-${{ runner.os }}-${{ hashFiles('tools/phpstan/phpstan.neon') }}
